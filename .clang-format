@@ -1,0 +1,7 @@
+AllowShortBlocksOnASingleLine: Always
+AllowShortCaseLabelsOnASingleLine: False
+AllowShortFunctionsOnASingleLine: Empty
+
+BreakBeforeBraces: Allman
+
+IndentWidth: 4
