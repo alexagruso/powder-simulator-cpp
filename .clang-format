@@ -8,7 +8,7 @@ AllowShortBlocksOnASingleLine: Always
 AllowShortCaseLabelsOnASingleLine: True
 AllowShortEnumsOnASingleLine: True
 AllowShortFunctionsOnASingleLine: Empty
-AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortIfStatementsOnASingleLine: Never
 BreakBeforeBraces: Allman
 ColumnLimit: 120
 IndentWidth: 4

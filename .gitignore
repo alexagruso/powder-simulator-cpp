@@ -30,6 +30,7 @@
 *.exe
 *.out
 *.app
+powdersim
 
 # CMake
 CMakeLists.txt.user
