@@ -12,3 +12,6 @@ A simple powder toy-like program for my software engineering class
     Push Access Works
     Project is Runnable
     I needed to install SFML as well, 'brew install SFML' fixed my error.
+
+## Notes from Mauro
+    Pushed successfully
