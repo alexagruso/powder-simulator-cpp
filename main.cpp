@@ -1,4 +1,7 @@
+#include "config.hpp"
 #include "event.hpp"
+#include "eventHandler.hpp"
+#include "window.hpp"
 
 #include <SFML/Window.hpp>
 #include <SFML/Window/Event.hpp>
@@ -11,40 +14,20 @@ using namespace ps;
 
 int main()
 {
-    sf::Window window(sf::VideoMode(800, 600), "Hello, World!", sf::Style::Default);
+    Window* window = new Window(ps::config::WINDOW_WIDTH, ps::config::WINDOW_HEIGHT);
 
-    std::stack<sys::Event*> events;
+    // while (window.isOpen())
+    // {
+    //     sf::Event event;
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
-            }
-            else if (event.type == sf::Event::KeyPressed)
-            {
-                sys::KeyboardEvent keyEvent{
-                    event.key.code,
-                    true,
-                    true,
-                };
-
-                sys::Event* newEvent = new sys::Event(keyEvent);
-
-                events.push(newEvent);
-            }
-        }
-
-        while (!events.empty())
-        {
-            events.top()->perform("Hello, World!");
-            events.pop();
-        }
-    }
+    //     while (window.pollEvent(event))
+    //     {
+    //         if (event.type == sf::Event::Closed)
+    //         {
+    //             window.close();
+    //         }
+    //     }
+    // }
 
     return 0;
 }
