@@ -1,15 +1,14 @@
-#include "Button.hpp"
 #include "event/Event.hpp"
+#include "ui/Button.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
 
 #include <iostream>
 #include <random>
+#include <stack>
 #include <variant>
 #include <vector>
-
-using namespace Powder;
 
 const unsigned int WINDOW_WIDTH = 800;
 const unsigned int WINDOW_HEIGHT = 600;
@@ -18,6 +17,11 @@ const std::string WINDOW_TITLE = "Powder Simulator";
 
 const sf::Color WINDOW_FILL_COLOR = sf::Color::Black;
 
+Powder::Button button{
+    {50, 50},
+    {50, 50}
+};
+
 int main()
 {
     sf::RenderWindow window{
@@ -25,23 +29,52 @@ int main()
         WINDOW_TITLE, sf::Style::Default
     };
 
+    std::stack<Powder::Event> events;
+
     while (window.isOpen())
     {
-        sf::Event event;
+        sf::Event systemEvent;
 
-        while (window.pollEvent(event))
+        while (window.pollEvent(systemEvent))
         {
-            if (event.type == sf::Event::Closed)
+            switch (systemEvent.type)
+            {
+            case sf::Event::Closed:
             {
                 window.close();
+                break;
             }
-            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            case sf::Event::KeyPressed:
             {
-                window.close();
+                events.push(Powder::KeyboardEvent{systemEvent.key.code});
+                break;
+            }
+            case sf::Event::MouseButtonPressed:
+            {
+                events.push(Powder::MouseEvent{systemEvent.mouseMove.x, systemEvent.mouseMove.y,
+                                               systemEvent.mouseButton.button});
+            }
+            case sf::Event::MouseMoved:
+            {
+                events.push(Powder::MouseEvent{systemEvent.mouseMove.x, systemEvent.mouseMove.y,
+                                               systemEvent.mouseButton.button});
+                break;
+            }
+            default: break;
             }
         }
 
         window.clear(WINDOW_FILL_COLOR);
+
+        while (!events.empty())
+        {
+            const Powder::Event& currentEvent = events.top();
+
+            button.earlyUpdate(events.top());
+            events.pop();
+        }
+
+        button.drawTo(&window);
 
         window.display();
     }
