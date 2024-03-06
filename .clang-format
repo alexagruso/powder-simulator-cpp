@@ -11,6 +11,7 @@ AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
 BreakBeforeBraces: Allman
 ColumnLimit: 120
+IndentCaseLabels: True
 IndentWidth: 4
 PointerAlignment: Left
 SpaceAfterCStyleCast: True
