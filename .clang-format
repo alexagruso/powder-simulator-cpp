@@ -15,3 +15,4 @@ IndentCaseLabels: True
 IndentWidth: 4
 PointerAlignment: Left
 SpaceAfterCStyleCast: True
+SpacesInAngles: Leave
