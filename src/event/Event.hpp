@@ -1,6 +1,8 @@
 #ifndef EVENT
 #define EVENT
 
+#include "physics/Particle.hpp"
+
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
@@ -25,6 +27,11 @@ struct ApplicationExitEvent
 {
 };
 
+struct ChangeActiveElementEvent
+{
+    Physics::Element element;
+};
+
 // std::bitset holds the flags for each key, more efficient than using a bool array
 // Each key has four flags, PRESSED, ACTIVE, RELEASED, and IDLE
 struct KeyboardEvent
@@ -47,7 +54,7 @@ struct MouseEvent
 
 //! Events will be defined as structs, maybe a general interface will be made but
 //! for now this will be fine.
-using Event = std::variant<ApplicationExitEvent, KeyboardEvent, MouseEvent>;
+using Event = std::variant<ApplicationExitEvent, ChangeActiveElementEvent, KeyboardEvent, MouseEvent>;
 
 } // namespace Powder
 
