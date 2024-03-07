@@ -1,5 +1,5 @@
-#ifndef OVERLOAD
-#define OVERLOAD
+#ifndef OVERLOADED
+#define OVERLOADED
 
 namespace Powder::Util
 {
@@ -15,4 +15,4 @@ template <typename... Types> Overloaded(Types...) -> Overloaded<Types...>;
 
 } // namespace Powder::Util
 
-#endif // OVERLOAD
+#endif // OVERLOADED
