@@ -9,6 +9,7 @@
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/Window/WindowBase.hpp>
 
+#include <cmath>
 #include <iostream>
 #include <optional>
 #include <random>
@@ -25,13 +26,21 @@ const std::string WINDOW_TITLE = "Powder Simulator";
 
 const sf::Color WINDOW_FILL_COLOR = sf::Color::Black;
 
-Powder::Button button{
-    {50, 50},
-    {50, 50}
-};
+double tick = 0;
+std::vector<Powder::Button> buttons;
+
+const unsigned int BUTTON_COUNT = 25;
 
 int main()
 {
+    for (int i = 0; i < BUTTON_COUNT; i++)
+    {
+        buttons.push_back(Powder::Button{
+            {0, 0},
+            {0, 0}
+        });
+    }
+
     sf::RenderWindow window{
         sf::VideoMode{WINDOW_WIDTH, WINDOW_HEIGHT},
         WINDOW_TITLE, sf::Style::Default
@@ -55,7 +64,7 @@ int main()
             using Powder::InputStatus;
 
             //! Each branch of this switch statement is a different SFML event that can occur,
-            //?     I opted to not put this functionality into a member function because I don't intend for the
+            //? I opted to not put this functionality into a member function because I don't intend for the
             //? std::bitset instances to be accessed directly from external objects.
             switch (systemEvent.type)
             {
@@ -106,11 +115,14 @@ int main()
 
             const Powder::Event& currentEvent = events.top();
 
-            // TODO: refactor this into a general event handler interface
-            button.handleEvent(currentEvent);
+            for (Powder::Button& button : buttons)
+            {
+                // TODO: refactor this into a general event handler interface
+                button.handleEvent(currentEvent);
+            }
 
             //!     This is how we pattern match with std::variant instances, please read and understand:
-            //!     Using the Overloaded<Ts...> class defined in util, we can pass a lambda for each
+            //! Using the Overloaded<Ts...> class defined in util, we can pass a lambda for each
             //! type that we wish to check for. If we want to use an externally scoped variable inside
             //! the lambda, you include it in the lambda's capture, or in the []. We then pass the
             //! std::variant instance, in this case "currentEvent" to the std::visit function, and the
@@ -156,10 +168,25 @@ int main()
 
         window.clear(WINDOW_FILL_COLOR);
 
-        // TODO: refactor this out to a general drawable object interface
-        button.tick(window);
+        // logic for button circle
+        for (int i = 0; i < buttons.size(); i++)
+        {
+            float xPosition =
+                200 * cos(((tick + ((float) i / BUTTON_COUNT) * 360) * (M_PI / 180.0)) + WINDOW_WIDTH / 2.0) +
+                WINDOW_HEIGHT / 2.0;
+            float yPosition =
+                200 * sin(((tick + ((float) i / BUTTON_COUNT) * 360) * (M_PI / 180.0)) + WINDOW_WIDTH / 2.0) +
+                WINDOW_HEIGHT / 2.0;
+
+            buttons.at(i).size = {30, 30};
+            buttons.at(i).position = {xPosition, yPosition};
+
+            buttons.at(i).tick(window);
+        }
 
         window.display();
+
+        tick += 0.5;
     }
 
     return 0;

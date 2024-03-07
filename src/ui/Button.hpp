@@ -10,15 +10,17 @@
 namespace Powder
 {
 
+// TODO: Tidy up member variables
+
 class Button
 {
   private:
+  public:
     sf::Vector2f size;
     sf::Vector2f position;
 
     sf::RectangleShape body;
 
-  public:
     Button(sf::Vector2u size, sf::Vector2i position);
 
     bool contains(sf::Vector2i mousePosition) const;
