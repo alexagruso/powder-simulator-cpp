@@ -1,5 +1,7 @@
 #include "Button.hpp"
+#include "config/Config.hpp"
 #include "event/Event.hpp"
+#include "ui/Board.hpp"
 #include "util/Overloaded.hpp"
 
 #include <SFML/Graphics/Color.hpp>
@@ -14,13 +16,21 @@
 
 using namespace Powder;
 
-Button::Button(sf::Vector2u size, sf::Vector2i position)
+Button::Button(sf::Vector2u size, sf::Vector2i position, Positioning positioning = Positioning::LEFT)
     : size{static_cast<float>(size.x), static_cast<float>(size.y)},
       position{static_cast<float>(position.x), static_cast<float>(position.y)}
 {
     this->body.setSize(this->size);
-    this->body.setPosition(this->position);
     this->body.setFillColor(sf::Color::Red);
+
+    // positioning logic
+
+    if (this->positioning == Positioning::RIGHT)
+    {
+        this->position.x += (Config::WINDOW_WIDTH - size.x);
+    }
+
+    this->body.setPosition(this->position);
 }
 
 bool Button::contains(sf::Vector2i mousePosition) const
@@ -38,24 +48,16 @@ void Button::setColor(sf::Color color)
     this->body.setFillColor(color);
 }
 
-void Button::handleEvent(const Event& event)
+// TODO: board parameter is for demo only
+void Button::handleEvent(const Event& event, Board& board)
 {
     std::visit(
         Util::Overloaded{
-            [this](const MouseEvent& event)
+            [this, &board](const MouseEvent& event)
             {
-                if (this->contains(event.position))
+                if (this->contains(event.position) && event.query(sf::Mouse::Left, InputStatus::PRESSED))
                 {
-                    this->setColor(sf::Color::Green);
-
-                    if (event.query(sf::Mouse::Left, InputStatus::ACTIVE))
-                    {
-                        this->setColor(sf::Color::Blue);
-                    }
-                }
-                else
-                {
-                    this->setColor(sf::Color::Red);
+                    board.setActiveElement(this->element);
                 }
             },
             [](auto _) {},
