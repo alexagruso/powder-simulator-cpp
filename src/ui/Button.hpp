@@ -13,13 +13,8 @@ namespace Powder
 class Button
 {
   private:
-    unsigned int width;
-    unsigned int height;
-
-    int xPosition;
-    int yPosition;
-
-    bool active;
+    sf::Vector2f size;
+    sf::Vector2f position;
 
     sf::RectangleShape body;
 
@@ -27,11 +22,10 @@ class Button
     Button(sf::Vector2u size, sf::Vector2i position);
 
     bool contains(sf::Vector2i mousePosition) const;
-    bool isActive() const;
-    void drawTo(sf::RenderWindow* window) const;
     void setColor(sf::Color color);
 
-    void earlyUpdate(Event event);
+    void handleEvent(const Event& event);
+    void tick(sf::RenderWindow& window);
 };
 
 } // namespace Powder
