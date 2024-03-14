@@ -3,6 +3,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(EXECUTABLE_NAME "powdersim")
 set(PROJECT_NAME "Powder Simulator")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # generates clangd file
 
 project(${PROJECT_NAME} VERSION 0.1)
 
