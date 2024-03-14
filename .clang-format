@@ -9,6 +9,7 @@ AllowShortCaseLabelsOnASingleLine: True
 AllowShortEnumsOnASingleLine: True
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Empty
 BreakBeforeBraces: Allman
 ColumnLimit: 120
 IndentCaseLabels: True
