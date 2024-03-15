@@ -1,6 +1,6 @@
 #include "config/Config.hpp"
 #include "event/Event.hpp"
-#include "physics/Particle.hpp"
+#include "physics/Element.hpp"
 #include "ui/Board.hpp"
 #include "ui/Button.hpp"
 #include "util/Overloaded.hpp"
@@ -13,43 +13,49 @@
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/Window/WindowBase.hpp>
 
-#include <cmath>
-#include <iostream>
-#include <optional>
-#include <random>
 #include <stack>
 #include <variant>
-#include <vector>
-
-Powder::Board board{
-    {100, 100},
-};
-
-Powder::Button woodButton{
-    {50, 50},
-    {0,  0 },
-    Powder::Positioning::RIGHT,
-};
-
-Powder::Button stoneButton{
-    {50, 50},
-    {0,  50},
-    Powder::Positioning::RIGHT,
-};
-
-const unsigned int BUTTON_COUNT = 25;
 
 int main()
 {
-    woodButton.positioning = Powder::Positioning::RIGHT;
+    using namespace Powder;
+
+    Powder::Board board{
+        {100, 100},
+    };
+
+    Powder::Button woodButton{
+        {50, 50},
+        {0,  0 },
+        Powder::Positioning::RIGHT,
+    };
+
+    Powder::Button stoneButton{
+        {50, 50},
+        {0,  50},
+        Powder::Positioning::RIGHT,
+    };
+
+    Powder::Button plantButton{
+        {50, 50 },
+        {0,  100},
+        Powder::Positioning::RIGHT,
+    };
+
+    Powder::Button fireButton{
+        {50, 50 },
+        {0,  150},
+        Powder::Positioning::RIGHT,
+    };
+
     woodButton.element = Powder::Physics::Wood{};
     woodButton.setColor(sf::Color::Yellow);
-
-    stoneButton.positioning = Powder::Positioning::RIGHT;
     stoneButton.element = Powder::Physics::Stone{};
     stoneButton.setColor(sf::Color::White);
-
-    using namespace Powder;
+    plantButton.element = Powder::Physics::Plant{};
+    plantButton.setColor(sf::Color::Green);
+    fireButton.element = Powder::Physics::Fire{};
+    fireButton.setColor(sf::Color::Red);
 
     sf::RenderWindow window{
         sf::VideoMode{Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT},
@@ -135,12 +141,15 @@ int main()
         {
             using namespace Powder::Util;
 
-            const Powder::Event& currentEvent = events.top();
+            const Powder::Event currentEvent = events.top();
+            events.pop();
 
             board.handleEvent(currentEvent);
 
-            woodButton.handleEvent(currentEvent, board);
-            stoneButton.handleEvent(currentEvent, board);
+            woodButton.handleEvent(currentEvent, events);
+            stoneButton.handleEvent(currentEvent, events);
+            plantButton.handleEvent(currentEvent, events);
+            fireButton.handleEvent(currentEvent, events);
 
             //! This is how we pattern match with std::variant instances, please read and understand:
             //! Using the Overloaded<Ts...> class defined in util, we can pass a lambda for each
@@ -150,7 +159,10 @@ int main()
             //! rest is taken care of for us. Overloaded<Ts...> also requires a fallback case, and in this
             //! case it is implemented as an empty lambda with one argument of type auto.
             //? See the Event source code files for more information on implementing std::variant types.
-            std::visit(Overloaded{[&window](const Powder::ApplicationExitEvent& _) { window.close(); },
+            std::visit(Overloaded{[&window](const Powder::ApplicationExitEvent& _)
+                                  {
+                                      window.close();
+                                  },
                                   [&window](const Powder::KeyboardEvent& event)
                                   {
                                       if (event.query(sf::Keyboard::Escape, InputStatus::PRESSED))
@@ -158,10 +170,12 @@ int main()
                                           window.close();
                                       }
                                   },
+                                  [&board](const Powder::ChangeActiveElementEvent& event)
+                                  {
+                                      board.setActiveElement(event.element);
+                                  },
                                   [](auto _) {}},
                        currentEvent);
-
-            events.pop();
         }
 
         // Done with events
@@ -193,6 +207,8 @@ int main()
 
         woodButton.tick(window);
         stoneButton.tick(window);
+        fireButton.tick(window);
+        plantButton.tick(window);
 
         window.display();
     }

@@ -10,6 +10,8 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Window.hpp>
 
+#include <stack>
+
 namespace Powder
 {
 
@@ -42,7 +44,7 @@ class Button
     bool contains(sf::Vector2i mousePosition) const;
     void setColor(sf::Color color);
 
-    void handleEvent(const Event& event, Board& board);
+    void handleEvent(const Event& event, std::stack<Event>& events);
     void tick(sf::RenderWindow& window);
 };
 
