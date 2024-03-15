@@ -1,4 +1,5 @@
 #include "Board.hpp"
+
 #include "event/Event.hpp"
 #include "physics/Particle.hpp"
 #include "util/Overloaded.hpp"
@@ -65,7 +66,7 @@ void Board::handleEvent(const Event& event)
                             if (position.x + i >= this->dimensions.x || position.x + i < 0 ||
                                 position.y + j >= this->dimensions.y || position.y + j < 0)
                             {
-                                return;
+                                continue;
                             }
 
                             this->particles.at(position.y + j).at(position.x + i) = Particle{this->activeElement};
@@ -101,13 +102,12 @@ void Board::tick(sf::RenderWindow& window)
             {
                 using namespace Powder::Util;
 
-                std::visit(
-                    Overloaded{
-                        [&particleRect](const Wood& _) { particleRect.setFillColor(sf::Color::Yellow); },
-                        [&particleRect](const Stone& _) { particleRect.setFillColor(sf::Color::White); },
-                        [](auto _) {},
-                    },
-                    currentParticle->element);
+                std::visit(Overloaded{[&particleRect](const auto& element)
+                                      {
+                                          // HACK: fillColor exists on all ElementVariant variants
+                                          particleRect.setFillColor(element.fillColor);
+                                      }},
+                           currentParticle->element);
             }
 
             window.draw(particleRect);

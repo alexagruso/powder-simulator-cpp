@@ -1,7 +1,6 @@
 #include "Button.hpp"
 #include "config/Config.hpp"
 #include "event/Event.hpp"
-#include "ui/Board.hpp"
 #include "util/Overloaded.hpp"
 
 #include <SFML/Graphics/Color.hpp>
@@ -11,7 +10,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 
-#include <iostream>
+#include <stack>
 #include <variant>
 
 using namespace Powder;
@@ -49,15 +48,15 @@ void Button::setColor(sf::Color color)
 }
 
 // TODO: board parameter is for demo only
-void Button::handleEvent(const Event& event, Board& board)
+void Button::handleEvent(const Event& event, std::stack<Event>& events)
 {
     std::visit(
         Util::Overloaded{
-            [this, &board](const MouseEvent& event)
+            [this, &events](const MouseEvent& event)
             {
                 if (this->contains(event.position) && event.query(sf::Mouse::Left, InputStatus::PRESSED))
                 {
-                    board.setActiveElement(this->element);
+                    events.push(ChangeActiveElementEvent{this->element});
                 }
             },
             [](auto _) {},
