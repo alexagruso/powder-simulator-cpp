@@ -1,22 +1,10 @@
 #ifndef PARTICLE
 #define PARTICLE
 
-#include <SFML/Graphics/Color.hpp>
-
-#include <variant>
+#include "physics/Element.hpp"
 
 namespace Powder::Physics
 {
-
-struct Wood
-{
-};
-
-struct Stone
-{
-};
-
-using Element = std::variant<Wood, Stone>;
 
 struct Particle
 {
