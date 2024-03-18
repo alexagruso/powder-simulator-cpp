@@ -1,6 +1,7 @@
 #include "Board.hpp"
 
 #include "event/Event.hpp"
+#include "physics/Element.hpp"
 #include "physics/Particle.hpp"
 #include "util/Overloaded.hpp"
 
@@ -10,7 +11,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 
-#include <iostream>
 #include <optional>
 #include <variant>
 
@@ -31,7 +31,7 @@ Board::Board(sf::Vector2u dimensions) : dimensions{dimensions}
     {
         for (int x = 0; x < this->dimensions.x; x++)
         {
-            this->particles.at(y).at(x) = std::nullopt;
+            // this->at({x, y}) = std::nullopt;
         }
     }
 }
@@ -44,6 +44,16 @@ sf::Vector2u Board::mouseToBoardPosition(sf::Vector2i mousePosition)
 void Board::setActiveElement(Physics::Element element)
 {
     this->activeElement = element;
+}
+
+const OptionalParticle Board::at(sf::Vector2i position) const
+{
+    return this->particles.at(position.y).at(position.x);
+}
+
+void Board::set(sf::Vector2i position, Physics::Element element)
+{
+    this->particles.at(position.y).at(position.x) = Physics::Particle{element};
 }
 
 void Board::handleEvent(const Event& event)
