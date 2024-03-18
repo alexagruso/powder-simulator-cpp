@@ -203,6 +203,13 @@ int main()
 
         window.clear(sf::Color::Black);
 
+        // board border
+        sf::RectangleShape border{};
+        border.setFillColor(sf::Color::White);
+        border.setSize({515, 515});
+        border.setPosition({0, 0});
+        window.draw(border);
+
         board.tick(window);
 
         woodButton.tick(window);
