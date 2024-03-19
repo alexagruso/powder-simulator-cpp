@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.12)
+set(CMAKE_CXX_STANDARD 20)
 
 set(EXECUTABLE_NAME "powdersim")
 set(PROJECT_NAME "Powder Simulator")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # generates clangd file
 
 project(${PROJECT_NAME} VERSION 0.1)
 
@@ -14,7 +16,7 @@ add_executable(${EXECUTABLE_NAME} "${SOURCES};main.cpp")
 target_include_directories(${EXECUTABLE_NAME} PRIVATE "src")
 
 # links SFML
-find_package(SFML REQUIRED COMPONENTS graphics system)
-target_link_libraries(${EXECUTABLE_NAME} sfml-graphics sfml-system)
+find_package(SFML REQUIRED COMPONENTS graphics system window)
+target_link_libraries(${EXECUTABLE_NAME} sfml-graphics sfml-system sfml-window)
 
 message("CMake was successful")
