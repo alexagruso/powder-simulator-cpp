@@ -12,6 +12,7 @@ A simple powder toy-like program for my software engineering class
     Push Access Works
     Project is Runnable
     I needed to install SFML as well, 'brew install SFML' fixed my error.
+    Upon OS update (Mac machine), errors occurred. Delete 'CMakeCache.txt' and rerun as above.
 
 ## Notes from Mauro
     Pushed successfully
