@@ -13,6 +13,8 @@ const unsigned int FRAMERATE_LIMIT = 60;
 
 const std::string WINDOW_TITLE = "Powder Simulator";
 
+const int BRUSH_RADIUS = 1;
+
 } // namespace Powder::Config
 
 #endif // CONFIG

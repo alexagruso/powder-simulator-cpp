@@ -10,6 +10,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include <optional>
+#include <stack>
 #include <vector>
 
 namespace Powder
@@ -23,8 +24,12 @@ class Board
     sf::Vector2u dimensions;
 
     std::vector< std::vector<OptionalParticle> > particles;
+    //  HACK: find better way to avoid createParticle conflicts
+    //  TODO: create ephemeral oldParticle buffer
+    std::vector< std::vector<bool> > particleCreations;
+    std::vector< std::vector<bool> > pointerPixels;
 
-    sf::Vector2u mouseToBoardPosition(sf::Vector2i mousePosition);
+    sf::Vector2i mouseToBoardPosition(sf::Vector2i mousePosition);
 
     Physics::Element activeElement;
 
@@ -34,10 +39,13 @@ class Board
     void setActiveElement(Physics::Element element);
 
     const OptionalParticle at(sf::Vector2i position) const;
-    void set(sf::Vector2i position, Physics::Element element);
+    void set(sf::Vector2i position, OptionalParticle particle);
+    bool contains(sf::Vector2i position) const;
 
-    void handleEvent(const Event& event);
-    void tick(sf::RenderWindow& window);
+    void resetBoardState();
+
+    void handleEvent(const Event& event, std::stack<Event>& events);
+    void tick(sf::RenderWindow& window, std::stack<Event>& events);
 };
 
 } // namespace Powder
