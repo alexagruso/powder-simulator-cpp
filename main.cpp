@@ -193,7 +193,7 @@ int main()
 
         // board border
         sf::RectangleShape border{};
-        border.setFillColor(sf::Color::White);
+        border.setFillColor(sf::Color{127, 127, 127});
         border.setSize({515, 515});
         border.setPosition({0, 0});
         window.draw(border);

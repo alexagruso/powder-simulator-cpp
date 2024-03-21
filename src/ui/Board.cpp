@@ -106,6 +106,11 @@ void Board::handleEvent(const Event& event, std::stack<Event>& events)
                             {
                                 events.push(ParticleCreationEvent{currentPosition, this->activeElement});
                             }
+
+                            if (event.query(sf::Mouse::Right, InputStatus::ACTIVE))
+                            {
+                                events.push(ParticleDeletionEvent{currentPosition});
+                            }
                         }
                     }
                 }
