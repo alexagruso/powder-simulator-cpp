@@ -48,6 +48,12 @@ int main()
         Powder::Positioning::RIGHT,
     };
 
+    Powder::Button waterButton{
+        {50, 50 },
+        {0,  200},
+        Powder::Positioning::RIGHT,
+    };
+
     woodButton.element = Powder::Physics::Wood{};
     woodButton.setColor(sf::Color::Yellow);
     stoneButton.element = Powder::Physics::Stone{};
@@ -56,6 +62,8 @@ int main()
     plantButton.setColor(sf::Color::Green);
     fireButton.element = Powder::Physics::Fire{};
     fireButton.setColor(sf::Color::Red);
+    waterButton.element = Powder::Physics::Water{};
+    waterButton.setColor(sf::Color::Blue);
 
     sf::RenderWindow window{
         sf::VideoMode{Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT},
@@ -150,6 +158,7 @@ int main()
             stoneButton.handleEvent(currentEvent, events);
             plantButton.handleEvent(currentEvent, events);
             fireButton.handleEvent(currentEvent, events);
+            waterButton.handleEvent(currentEvent, events);
 
             std::visit(Overloaded{[&window](const Powder::ApplicationExitEvent& _)
                                   {
@@ -202,8 +211,9 @@ int main()
 
         woodButton.tick(window);
         stoneButton.tick(window);
-        fireButton.tick(window);
         plantButton.tick(window);
+        fireButton.tick(window);
+        waterButton.tick(window);
 
         board.resetBoardState();
 

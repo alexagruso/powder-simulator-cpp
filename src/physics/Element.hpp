@@ -40,8 +40,14 @@ struct Stone
     ElementType type = ElementType::POWDER;
 };
 
+struct Water
+{
+    sf::Color fillColor = sf::Color::Blue;
+    ElementType type = ElementType::LIQUID;
+};
+
 // HACK: janky
-using Element = std::variant<Wood, Stone, Plant, Fire>;
+using Element = std::variant<Wood, Stone, Plant, Fire, Water>;
 
 } // namespace Powder::Physics
 

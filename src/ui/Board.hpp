@@ -10,6 +10,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include <optional>
+#include <random>
 #include <stack>
 #include <vector>
 
@@ -31,7 +32,11 @@ class Board
 
     sf::Vector2i mouseToBoardPosition(sf::Vector2i mousePosition);
 
+    bool canSwap(sf::Vector2i origin, sf::Vector2i destination);
+
     Physics::Element activeElement;
+
+    std::mt19937 randomEngine;
 
   public:
     Board(sf::Vector2u dimensions);

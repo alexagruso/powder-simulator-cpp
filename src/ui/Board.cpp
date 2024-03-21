@@ -12,9 +12,12 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 
+#include <chrono>
 #include <optional>
+#include <random>
 #include <stack>
 #include <variant>
+#include <vector>
 
 using namespace Powder;
 
@@ -42,11 +45,22 @@ Board::Board(sf::Vector2u dimensions) : dimensions{dimensions}
             this->pointerPixels.at(y).at(x) = false;
         }
     }
+
+    this->randomEngine = std::mt19937{
+        static_cast<std::mt19937::result_type>(std::chrono::steady_clock::now().time_since_epoch().count())};
 }
 
 sf::Vector2i Board::mouseToBoardPosition(sf::Vector2i mousePosition)
 {
     return {mousePosition.x / static_cast<int>(PARTICLE_SIZE), mousePosition.y / static_cast<int>(PARTICLE_SIZE)};
+}
+
+bool Board::canSwap(sf::Vector2i origin, sf::Vector2i offset)
+{
+    sf::Vector2i checkPosition = origin + offset;
+
+    return this->contains(checkPosition) && this->at(checkPosition) == std::nullopt &&
+           !this->particleCreations.at(checkPosition.y).at(checkPosition.x);
 }
 
 void Board::setActiveElement(Physics::Element element)
@@ -190,47 +204,133 @@ void Board::tick(sf::RenderWindow& window, std::stack<Event>& events)
                     {
                         if (y < this->dimensions.y - 1)
                         {
-                            if (this->at({x, y + 1}) == std::nullopt && !this->particleCreations.at(y + 1).at(x))
+                            if (canSwap({x, y}, {0, 1}))
                             {
                                 events.push(ParticleCreationEvent{
                                     {x, y + 1},
-                                    Stone{}
+                                    element
                                 });
-
-                                events.push(ParticleDeletionEvent{
-                                    {x, y}
-                                });
-
                                 this->particleCreations.at(y + 1).at(x) = true;
-                            }
-                            else if (this->contains({x - 1, y + 1}) && this->at({x - 1, y + 1}) == std::nullopt &&
-                                     !this->particleCreations.at(y + 1).at(x - 1))
-                            {
-                                events.push(ParticleCreationEvent{
-                                    {x - 1, y + 1},
-                                    Stone{}
-                                });
 
                                 events.push(ParticleDeletionEvent{
-                                    {x, y}
+                                    {x, y},
                                 });
-
-                                this->particleCreations.at(y + 1).at(x - 1) = true;
                             }
-                            else if (this->contains({x + 1, y + 1}) && this->at({x + 1, y + 1}) == std::nullopt &&
-                                     !this->particleCreations.at(y + 1).at(x + 1))
+                            else
                             {
-                                events.push(ParticleCreationEvent{
-                                    {x + 1, y + 1},
-                                    Stone{}
-                                });
+                                sf::Vector2i bottomLeft = {-1, 1};
+                                sf::Vector2i bottomRight = {1, 1};
 
-                                events.push(ParticleDeletionEvent{
-                                    {x, y}
-                                });
+                                std::vector<sf::Vector2i> movementCandidates{};
 
-                                this->particleCreations.at(y + 1).at(x + 1) = true;
+                                if (canSwap({x, y}, bottomLeft))
+                                {
+                                    movementCandidates.push_back(bottomLeft);
+                                }
+
+                                if (canSwap({x, y}, bottomRight))
+                                {
+                                    movementCandidates.push_back(bottomRight);
+                                }
+
+                                if (movementCandidates.size() != 0)
+                                {
+                                    std::uniform_int_distribution<int> direction{
+                                        0, static_cast<int>(movementCandidates.size() - 1)};
+
+                                    sf::Vector2i swapPosition =
+                                        sf::Vector2i{x, y} + movementCandidates.at(direction(this->randomEngine));
+
+                                    events.push(ParticleCreationEvent{swapPosition, element});
+                                    this->particleCreations.at(swapPosition.y).at(swapPosition.x) = true;
+
+                                    events.push(ParticleDeletionEvent{
+                                        {x, y},
+                                    });
+                                }
                             }
+                        }
+                    },
+                    [this, x, y, &events](const Water& element)
+                    {
+                        if (canSwap({x, y}, {0, 1}))
+                        {
+                            events.push(ParticleCreationEvent{
+                                {x, y + 1},
+                                element
+                            });
+                            this->particleCreations.at(y + 1).at(x) = true;
+
+                            events.push(ParticleDeletionEvent{
+                                {x, y},
+                            });
+
+                            return;
+                        }
+
+                        sf::Vector2i bottomLeft = {-1, 1};
+                        sf::Vector2i bottomRight = {1, 1};
+
+                        std::vector<sf::Vector2i> movementCandidates{};
+
+                        if (canSwap({x, y}, bottomLeft))
+                        {
+                            movementCandidates.push_back(bottomLeft);
+                        }
+
+                        if (canSwap({x, y}, bottomRight))
+                        {
+                            movementCandidates.push_back(bottomRight);
+                        }
+
+                        if (movementCandidates.size() != 0)
+                        {
+                            std::uniform_int_distribution<int> direction{
+                                0, static_cast<int>(movementCandidates.size() - 1)};
+
+                            sf::Vector2i swapPosition =
+                                sf::Vector2i{x, y} + movementCandidates.at(direction(this->randomEngine));
+
+                            events.push(ParticleCreationEvent{swapPosition, element});
+                            this->particleCreations.at(swapPosition.y).at(swapPosition.x) = true;
+
+                            events.push(ParticleDeletionEvent{
+                                {x, y},
+                            });
+
+                            return;
+                        }
+
+                        sf::Vector2i left = {-1, 0};
+                        sf::Vector2i right = {1, 0};
+
+                        if (canSwap({x, y}, left))
+                        {
+                            movementCandidates.push_back(left);
+                        }
+
+                        if (canSwap({x, y}, right))
+                        {
+                            movementCandidates.push_back(right);
+                        }
+
+                        if (movementCandidates.size() != 0)
+                        {
+                            std::uniform_int_distribution<int> direction{
+                                0, static_cast<int>(movementCandidates.size() - 1)};
+
+                            int swapDirection = direction(this->randomEngine);
+
+                            sf::Vector2i swapPosition = sf::Vector2i{x, y} + movementCandidates.at(swapDirection);
+
+                            events.push(ParticleCreationEvent{swapPosition, element});
+                            this->particleCreations.at(swapPosition.y).at(swapPosition.x) = true;
+
+                            events.push(ParticleDeletionEvent{
+                                {x, y},
+                            });
+
+                            return;
                         }
                     },
                     [](auto _) {},
