@@ -112,7 +112,7 @@ void Board::handleEvent(const Event& event, std::stack<Event>& events)
                     {
                         sf::Vector2i currentPosition = {position.x + i, position.y + j};
 
-                        if (this->contains(currentPosition))
+                        if (this->contains(currentPosition) && this->at(currentPosition) == std::nullopt)
                         {
                             this->pointerPixels.at(currentPosition.y).at(currentPosition.x) = true;
 
@@ -312,6 +312,49 @@ void Board::tick(sf::RenderWindow& window, std::stack<Event>& events)
                         if (canSwap({x, y}, right))
                         {
                             movementCandidates.push_back(right);
+                        }
+
+                        if (movementCandidates.size() != 0)
+                        {
+                            std::uniform_int_distribution<int> direction{
+                                0, static_cast<int>(movementCandidates.size() - 1)};
+
+                            int swapDirection = direction(this->randomEngine);
+
+                            sf::Vector2i swapPosition = sf::Vector2i{x, y} + movementCandidates.at(swapDirection);
+
+                            events.push(ParticleCreationEvent{swapPosition, element});
+                            this->particleCreations.at(swapPosition.y).at(swapPosition.x) = true;
+
+                            events.push(ParticleDeletionEvent{
+                                {x, y},
+                            });
+
+                            return;
+                        }
+                    },
+                    [this, x, y, &events](const Fire& element)
+                    {
+                        std::vector<sf::Vector2i> directions = {
+                            {-1, -1},
+                            {-1, 0 },
+                            {-1, 1 },
+                            {0,  -1},
+                            {0,  0 },
+                            {0,  1 },
+                            {1,  -1},
+                            {1,  0 },
+                            {1,  1 }
+                        };
+
+                        std::vector<sf::Vector2i> movementCandidates = {};
+
+                        for (const sf::Vector2i& direction : directions)
+                        {
+                            if (canSwap({x, y}, direction))
+                            {
+                                movementCandidates.push_back(direction);
+                            }
                         }
 
                         if (movementCandidates.size() != 0)
