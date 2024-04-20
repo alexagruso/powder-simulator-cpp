@@ -8,53 +8,54 @@
 #include <SFML/Window/Mouse.hpp>
 
 #include <bitset>
-#include <variant>
 
 namespace Powder
 {
 
-// Enum classes enforce type checking
+// PRESSED:  input was pressed this frame
+// HELD:     input is currently active
+// RELEASED: input was released this frame
+// IDLE:     input is not currently active
 enum class InputStatus
 {
-    ACTIVE,
     PRESSED,
+    HELD,
     RELEASED,
     IDLE,
 };
 
-// Empty event for closing the application, useful for signaling events that never change
-struct ApplicationExitEvent
+struct Event
+{
+    // Default priority for all events, higher value means higher priority
+    static const uint priority = 0;
+
+    template <typename EventType>
+    static bool isOfType(const Event& event);
+
+    virtual ~Event() {} // This forces the type to be considered polymorphic
+};
+
+// This event will trigger the application to close
+struct ApplicationExitEvent : Event
 {
 };
 
-struct ChangeActiveElementEvent
+struct ChangeActiveElementEvent : Event
 {
     Physics::Element element;
 };
 
-// std::bitset holds the flags for each key, more efficient than using a bool array
-// Each key has four flags, PRESSED, ACTIVE, RELEASED, and IDLE
-struct KeyboardEvent
+struct InputEvent : Event
 {
     std::bitset<sf::Keyboard::KeyCount * 3> keys;
 
-    bool query(sf::Keyboard::Key key, InputStatus status) const;
-};
-
-// std::bitset is used similarly here
-// Each button also has the same flags as each keys
-struct MouseEvent
-{
-    bool moving;
-    sf::Vector2i position;
+    bool mouseIsMoving;
+    sf::Vector2i mousePosition;
     std::bitset<sf::Mouse::ButtonCount * 3> buttons;
 
-    bool query(sf::Mouse::Button button, InputStatus status) const;
+    bool queryKey(sf::Keyboard::Key key, InputStatus status) const;
+    bool queryMouseButton(sf::Mouse::Button mouseButton, InputStatus status) const;
 };
-
-//! Events will be defined as structs, maybe a general interface will be made but
-//! for now this will be fine.
-using Event = std::variant<ApplicationExitEvent, ChangeActiveElementEvent, KeyboardEvent, MouseEvent>;
 
 } // namespace Powder
 
