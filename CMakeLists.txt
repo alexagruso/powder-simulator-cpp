@@ -16,14 +16,5 @@ add_executable(${EXECUTABLE_NAME} "${SOURCES};main.cpp")
 target_include_directories(${EXECUTABLE_NAME} PRIVATE "src")
 
 # links SFML
-<<<<<<< HEAD
 find_package(SFML REQUIRED COMPONENTS graphics system window)
 target_link_libraries(${EXECUTABLE_NAME} sfml-graphics sfml-system sfml-window)
-
-message("CMake was successful")
-=======
-find_package(SFML REQUIRED COMPONENTS graphics system)
-target_link_libraries(${EXECUTABLE_NAME} sfml-graphics sfml-system)
-
-message("CMake was successful")
->>>>>>> 3e5813e (Verify github permissions)
