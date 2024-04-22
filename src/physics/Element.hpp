@@ -1,36 +1,62 @@
-#ifndef ELEMENT
-#define ELEMENT
+#ifndef POWDER_ELEMENT
+#define POWDER_ELEMENT
 
 #include <SFML/Graphics/Color.hpp>
 
-#include <variant>
+#include <optional>
 
 namespace Powder::Physics
 {
 
-struct Plant
+struct Element
 {
-    sf::Color fillColor = sf::Color::Green;
+    virtual ~Element() {}
+
+    //  TODO: extract this into Element.cpp
+    virtual sf::Color fillColor();
+
+    template <typename ElementType>
+    static std::optional<ElementType*> isOfType(Element* event)
+    {
+        ElementType* result = dynamic_cast<ElementType*>(event);
+
+        if (result != nullptr)
+        {
+            return result;
+        }
+
+        return std::nullopt;
+    }
 };
 
-struct Fire
+struct Fire : Element
 {
-    sf::Color fillColor = sf::Color::Red;
+    sf::Color fillColor() override;
 };
 
-struct Wood
+//  TODO: extract these into separate files
+
+struct Plant : Element
 {
-    sf::Color fillColor = sf::Color::Yellow;
+    sf::Color fillColor() override;
 };
 
-struct Stone
-{
-    sf::Color fillColor = sf::Color::White;
-};
-
-// HACK: janky
-using Element = std::variant<Wood, Stone, Plant, Fire>;
+// struct Wood : Element
+// {
+//     sf::Color fillColor() final
+//     {
+//         return sf::Color::Yellow;
+//     }
+// };
+//
+// struct Stone : Element
+// {
+//     sf::Color fillColor()
+//     {
+//         return sf::Color::White;
+//     }
+// };
 
 } // namespace Powder::Physics
 
-#endif // ELEMENT
+#endif // POWDER_ELEMENT
