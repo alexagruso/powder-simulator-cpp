@@ -18,5 +18,3 @@ target_include_directories(${EXECUTABLE_NAME} PRIVATE "src")
 # links SFML
 find_package(SFML REQUIRED COMPONENTS graphics system window)
 target_link_libraries(${EXECUTABLE_NAME} sfml-graphics sfml-system sfml-window)
-
-message("CMake was successful")
