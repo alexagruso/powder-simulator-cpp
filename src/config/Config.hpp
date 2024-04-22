@@ -1,5 +1,7 @@
-#ifndef CONFIG
-#define CONFIG
+#ifndef POWDER_CONFIG
+#define POWDER_CONFIG
+
+#include <SFML/Graphics/Color.hpp>
 
 #include <string>
 
@@ -13,6 +15,9 @@ const unsigned int FRAMERATE_LIMIT = 60;
 
 const std::string WINDOW_TITLE = "Powder Simulator";
 
+const sf::Color WINDOW_CLEAR_COLOR = sf::Color::Black;
+const sf::Color PUKE_PLACEHOLDER = sf::Color(0x89A203FF);
+
 } // namespace Powder::Config
 
-#endif // CONFIG
+#endif // POWDER_CONFIG
