@@ -3,6 +3,7 @@
 #include "application/Event.hpp"
 #include "config/Config.hpp"
 #include "physics/Element.hpp"
+#include "ui/BoardDisplay.hpp"
 #include "ui/ElementButton.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
@@ -10,7 +11,6 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 
-#include <iostream>
 #include <vector>
 
 using namespace Powder;
@@ -31,13 +31,25 @@ Application::Application()
     positioning.vertical = VerticalPositioning::TOP;
 
     //  TODO: this is temporary, make separate UI handler
-    ElementButton* button = new ElementButton{
+    ElementButton* fireButton = new ElementButton{
         {50, 50},
-        {0, 0},
+        {300, 0},
+        positioning, new Physics::Fire{}
+    };
+
+    ElementButton* plantButton = new ElementButton{
+        {50, 50},
+        {300, 50},
         positioning, new Physics::Plant{}
     };
 
-    this->entities.push_back(button);
+    BoardDisplay* board = new BoardDisplay{
+        {Config::BOARD_WIDTH, Config::BOARD_HEIGHT}
+    };
+
+    this->entities.push_back(fireButton);
+    this->entities.push_back(plantButton);
+    this->entities.push_back(board);
 }
 
 Application::~Application()

@@ -42,10 +42,6 @@ std::vector<Event*> ElementButton::handleEvent(Event* currentEvent)
             return {new ChangeActiveElementEvent{this->element}};
         }
     }
-    else if (Event::isOfType<ChangeActiveElementEvent>(currentEvent))
-    {
-        std::cout << "ha\n";
-    }
 
     return {};
 }

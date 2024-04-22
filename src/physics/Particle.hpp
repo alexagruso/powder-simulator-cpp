@@ -1,5 +1,5 @@
-#ifndef PARTICLE
-#define PARTICLE
+#ifndef POWDER_PARTICLE
+#define POWDER_PARTICLE
 
 #include "physics/Element.hpp"
 
@@ -8,9 +8,13 @@ namespace Powder::Physics
 
 struct Particle
 {
-    Element element;
+    Particle(Element* element);
+    // particle does not own element
+    // ~Particle();
+
+    Element* element;
 };
 
 } // namespace Powder::Physics
 
-#endif // PARTICLE
+#endif // POWDER_PARTICLE
