@@ -9,6 +9,7 @@ project(${PROJECT_NAME} VERSION 0.1)
 
 # recursively finds .cpp files in src/ and adds them to the target
 file(GLOB_RECURSE SOURCES "src/*.cpp")
+
 # ;main.cpp adds driver file to target
 add_executable(${EXECUTABLE_NAME} "${SOURCES};main.cpp")
 

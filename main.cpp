@@ -1,10 +1,8 @@
-#include "Application.hpp"
+#include "application/Application.hpp"
 
 int main()
 {
-    using namespace Powder;
-
-    Application simulation{};
+    Powder::Application simulation{};
     simulation.start();
 
     return 0;
