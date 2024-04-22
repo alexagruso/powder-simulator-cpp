@@ -52,9 +52,26 @@ struct MouseEvent
     bool query(sf::Mouse::Button button, InputStatus status) const;
 };
 
+struct ParticleCreationEvent
+{
+    sf::Vector2i position;
+    Physics::Element element;
+};
+
+struct ParticleDeletionEvent
+{
+    sf::Vector2i position;
+};
+
+struct ParticleGravityEvent
+{
+    sf::Vector2i position;
+};
+
 //! Events will be defined as structs, maybe a general interface will be made but
 //! for now this will be fine.
-using Event = std::variant<ApplicationExitEvent, ChangeActiveElementEvent, KeyboardEvent, MouseEvent>;
+using Event = std::variant<ApplicationExitEvent, ChangeActiveElementEvent, KeyboardEvent, MouseEvent,
+                           ParticleCreationEvent, ParticleDeletionEvent, ParticleGravityEvent>;
 
 } // namespace Powder
 
