@@ -2,6 +2,7 @@
 #include "config/Config.hpp"
 #include "event/Event.hpp"
 #include "util/Overloaded.hpp"
+#include "ui/Positioning.hpp"
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -21,6 +22,8 @@ Button::Button(sf::Vector2u size, sf::Vector2i position, Positioning positioning
 {
     this->body.setSize(this->size);
     this->body.setFillColor(sf::Color::Red);
+    this->body.setOutlineColor(sf::Color::Black);
+    this->body.setOutlineThickness(5.f);
 
     // positioning logic
 

@@ -4,6 +4,7 @@
 #include "event/Event.hpp"
 #include "physics/Particle.hpp"
 #include "ui/Board.hpp"
+#include "ui/Positioning.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -17,11 +18,7 @@ namespace Powder
 
 // TODO: extract this into general enum
 
-enum class Positioning
-{
-    RIGHT,
-    LEFT,
-};
+
 
 // TODO: Tidy up member variables
 
@@ -43,6 +40,7 @@ class Button
 
     bool contains(sf::Vector2i mousePosition) const;
     void setColor(sf::Color color);
+
 
     void handleEvent(const Event& event, std::stack<Event>& events);
     void tick(sf::RenderWindow& window);

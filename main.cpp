@@ -4,6 +4,9 @@
 #include "ui/Board.hpp"
 #include "ui/Button.hpp"
 #include "util/Overloaded.hpp"
+#include "ui/Positioning.hpp"
+#include "ui/Text.hpp"
+#include <iostream>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -12,6 +15,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/Window/WindowBase.hpp>
+#include <SFML/Graphics/Transformable.hpp>
 
 #include <stack>
 #include <variant>
@@ -27,31 +31,37 @@ int main()
     Powder::Button woodButton{
         {50, 50},
         {0,  0 },
-        Powder::Positioning::RIGHT,
+        Positioning::RIGHT,
     };
+
+    Powder::Text boiler{
+        {100, 0},
+        Positioning::LEFT,
+    };
+
 
     Powder::Button stoneButton{
         {50, 50},
         {0,  50},
-        Powder::Positioning::RIGHT,
+        Positioning::RIGHT,
     };
 
     Powder::Button plantButton{
         {50, 50 },
         {0,  100},
-        Powder::Positioning::RIGHT,
+        Positioning::RIGHT,
     };
 
     Powder::Button fireButton{
         {50, 50 },
         {0,  150},
-        Powder::Positioning::RIGHT,
+        Positioning::RIGHT,
     };
 
     Powder::Button waterButton{
         {50, 50 },
         {0,  200},
-        Powder::Positioning::RIGHT,
+        Positioning::RIGHT,
     };
 
     woodButton.element = Powder::Physics::Wood{};
@@ -64,6 +74,7 @@ int main()
     fireButton.setColor(sf::Color::Red);
     waterButton.element = Powder::Physics::Water{};
     waterButton.setColor(sf::Color::Blue);
+
 
     sf::RenderWindow window{
         sf::VideoMode{Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT},
@@ -214,6 +225,8 @@ int main()
         plantButton.tick(window);
         fireButton.tick(window);
         waterButton.tick(window);
+
+        boiler.tick(window);
 
         board.resetBoardState();
 
