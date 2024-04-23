@@ -16,9 +16,9 @@ struct Element
     virtual sf::Color fillColor();
 
     template <typename ElementType>
-    static std::optional<ElementType*> isOfType(Element* event)
+    static std::optional<ElementType*> isOfType(Element* element)
     {
-        ElementType* result = dynamic_cast<ElementType*>(event);
+        ElementType* result = dynamic_cast<ElementType*>(element);
 
         if (result != nullptr)
         {

@@ -2,6 +2,7 @@
 #define POWDER_EVENT
 
 #include "physics/Element.hpp"
+#include "physics/Particle.hpp"
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -79,6 +80,27 @@ struct InputEvent : Event
     //  TODO: find a better name for this
     InputEvent* cloneIntoNew();
 };
+
+// struct PhysicsUpdateEvent : Event
+// {
+//     // static const uint priority = 10;
+// };
+//
+// struct ParticleCreationEvent : Event
+// {
+//     ParticleCreationEvent(sf::Vector2u position, Physics::Particle particle) : position{position}, particle{particle}
+//     {}
+//
+//     sf::Vector2u position;
+//     Physics::Particle particle;
+// };
+//
+// struct ParticleDeletionEvent : Event
+// {
+//     ParticleDeletionEvent(sf::Vector2u position) : position{position} {}
+//
+//     sf::Vector2u position;
+// };
 
 } // namespace Powder
 

@@ -11,7 +11,7 @@ project(${PROJECT_NAME} VERSION 0.1)
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 # ;main.cpp adds driver file to target
-add_executable(${EXECUTABLE_NAME} "${SOURCES};main.cpp")
+add_executable(${EXECUTABLE_NAME} "${SOURCES}")
 
 # looks in src/ for include directories
 target_include_directories(${EXECUTABLE_NAME} PRIVATE "src")

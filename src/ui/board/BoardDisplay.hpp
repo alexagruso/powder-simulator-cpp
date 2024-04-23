@@ -1,8 +1,8 @@
 #ifndef POWDER_BOARD_DISPLAY
 #define POWDER_BOARD_DISPLAY
 
-#include "Entity.hpp"
-#include "ui/BoardState.hpp"
+#include "ui/Entity.hpp"
+#include "ui/board/BoardController.hpp"
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -10,12 +10,11 @@
 
 #include <vector>
 
-namespace Powder
+namespace Powder::UI
 {
 
 struct BoardDisplay : Entity
 {
-    // { row length, column length } for dimensions
     BoardDisplay(sf::Vector2u dimensions);
     ~BoardDisplay();
 
@@ -26,12 +25,12 @@ struct BoardDisplay : Entity
 
   private:
     sf::Vector2u dimensions;
-    BoardState boardState;
+    BoardController boardController;
 
     bool contains(sf::Vector2i mousePosition);
     std::optional<sf::Vector2u> mouseToBoardPosition(sf::Vector2i mousePosition);
 };
 
-} // namespace Powder
+} // namespace Powder::UI
 
 #endif // BOARD_BOARD_DISPLAY

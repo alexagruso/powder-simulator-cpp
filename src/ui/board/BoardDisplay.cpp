@@ -2,32 +2,38 @@
 
 #include "application/Event.hpp"
 #include "config/Config.hpp"
+#include "physics/Element.hpp"
+#include "physics/Particle.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Mouse.hpp>
 
-#include <iostream>
+using namespace Powder::UI;
 
-using namespace Powder;
-
-BoardDisplay::BoardDisplay(sf::Vector2u dimensions) : dimensions{dimensions}, boardState{dimensions} {}
+BoardDisplay::BoardDisplay(sf::Vector2u dimensions)
+    : dimensions{dimensions}, boardController{dimensions, new Physics::Fire{}}
+{
+}
 
 std::vector<Event*> BoardDisplay::handleEvent(Event* event)
 {
     if (auto check = Event::isOfType<ChangeActiveElementEvent>(event))
     {
-        auto event = check.value();
-        this->boardState.setActiveElement(event->element);
+        auto element = check.value()->element;
+        this->boardController.activeElement = element;
     }
     else if (auto checkEvent = Event::isOfType<InputEvent>(event))
     {
         auto event = checkEvent.value();
 
-        if (event->queryMouseButton(sf::Mouse::Left, InputStatus::PRESSED))
+        if (event->queryMouseButton(sf::Mouse::Left, InputStatus::HELD))
         {
             if (auto checkPosition = this->mouseToBoardPosition(event->mousePosition))
             {
+                auto fillPosition = checkPosition.value();
+                this->boardController.boardState.fill(fillPosition,
+                                                      new Physics::Particle{this->boardController.activeElement});
             }
         }
     }
@@ -35,11 +41,21 @@ std::vector<Event*> BoardDisplay::handleEvent(Event* event)
     return {};
 }
 
-void BoardDisplay::tick() {}
+void BoardDisplay::tick()
+{
+    this->boardController.processPhysics();
+}
 
 std::vector<sf::Drawable*> BoardDisplay::render()
 {
-    std::vector<sf::Drawable*> draws{};
+    sf::RectangleShape* border = new sf::RectangleShape{
+        {static_cast<float>(this->dimensions.x * Config::PARTICLE_PIXEL_SIZE + Config::BORDER_WIDTH),
+         static_cast<float>(this->dimensions.y * Config::PARTICLE_PIXEL_SIZE + Config::BORDER_WIDTH)}
+    };
+
+    border->setFillColor(sf::Color::White);
+
+    std::vector<sf::Drawable*> draws{border};
 
     for (uint x = 0; x < this->dimensions.x; x++)
     {
@@ -52,10 +68,14 @@ std::vector<sf::Drawable*> BoardDisplay::render()
             particlePixel->setPosition(static_cast<float>(x * Config::PARTICLE_PIXEL_SIZE),
                                        static_cast<float>(y * Config::PARTICLE_PIXEL_SIZE));
 
-            if (auto check = this->boardState.at({x, y}))
+            if (auto check = this->boardController.boardState.at({x, y}))
             {
-                Physics::Particle particle = check.value();
-                particlePixel->setFillColor(particle.element->fillColor());
+                Physics::Particle* particle = check.value();
+
+                if (particle->element)
+                {
+                    particlePixel->setFillColor(particle->element->fillColor());
+                }
             }
             else
             {
@@ -73,9 +93,9 @@ bool BoardDisplay::contains(sf::Vector2i mousePosition)
 {
     //  TODO: generalize to any board position
     const bool containedOnXAxis =
-        (mousePosition.x >= 0 && mousePosition.x <= this->dimensions.x * Config::PARTICLE_PIXEL_SIZE);
+        (mousePosition.x >= 0 && mousePosition.x < this->dimensions.x * Config::PARTICLE_PIXEL_SIZE);
     const bool containedOnYAxis =
-        (mousePosition.y >= 0 && mousePosition.y <= this->dimensions.y * Config::PARTICLE_PIXEL_SIZE);
+        (mousePosition.y >= 0 && mousePosition.y < this->dimensions.y * Config::PARTICLE_PIXEL_SIZE);
 
     return containedOnXAxis && containedOnYAxis;
 }

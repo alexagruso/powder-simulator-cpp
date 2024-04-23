@@ -23,7 +23,8 @@ const sf::Color PUKE_PLACEHOLDER = sf::Color(0x89A203FF);
 
 const uint BOARD_WIDTH = 100;
 const uint BOARD_HEIGHT = 100;
-const uint PARTICLE_PIXEL_SIZE = 2;
+const uint PARTICLE_PIXEL_SIZE = 3;
+const uint BORDER_WIDTH = 5;
 
 } // namespace Powder::Config
 

@@ -3,8 +3,8 @@
 #include "application/Event.hpp"
 #include "config/Config.hpp"
 #include "physics/Element.hpp"
-#include "ui/BoardDisplay.hpp"
 #include "ui/ElementButton.hpp"
+#include "ui/board/BoardDisplay.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -43,7 +43,7 @@ Application::Application()
         positioning, new Physics::Plant{}
     };
 
-    BoardDisplay* board = new BoardDisplay{
+    UI::BoardDisplay* board = new UI::BoardDisplay{
         {Config::BOARD_WIDTH, Config::BOARD_HEIGHT}
     };
 
