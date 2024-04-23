@@ -4,7 +4,6 @@
 #include "event/Event.hpp"
 #include "util/Overloaded.hpp"
 #include "ui/Positioning.hpp"
-#include "ui/font/arial.ttf"
 #include <iostream>
 
 #include <SFML/Graphics/Color.hpp>
@@ -29,9 +28,9 @@ namespace Powder
         this->text.setString("Hello World.");
         this->text.setCharacterSize(24);
         sf::Font font;
-        if(!font.loadFromFile("ui/font/arial.ttf")){
+        //if(!font.loadFromFile("ui/font/arial.ttf")){
             //Print an error
-        }
+        //}
 
         // positioning logic
 
