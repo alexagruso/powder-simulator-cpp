@@ -22,7 +22,7 @@ Button::Button(sf::Vector2u size, sf::Vector2i position, Positioning positioning
 {
     this->body.setSize(this->size);
     this->body.setFillColor(sf::Color::Red);
-    this->body.setOutlineColor(sf::Color::Black);
+    this->body.setOutlineColor(sf::Color(169,169,169,255));
     this->body.setOutlineThickness(5.f);
 
     // positioning logic

@@ -34,6 +34,7 @@ class Button
     // TODO: this element is for demo purposes only
     Physics::Element element;
 
+
     Positioning positioning = Positioning::RIGHT;
 
     Button(sf::Vector2u size, sf::Vector2i position, Positioning positioning);
