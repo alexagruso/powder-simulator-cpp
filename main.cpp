@@ -28,59 +28,64 @@ int main()
         {100, 100},
     };
 
-    Powder::Button woodButton{
-        {50, 50},
-        {0,  0 },
+    Powder::Text elementSelect{
+        {600, 10},
         Positioning::RIGHT,
     };
 
-    Powder::Text woodLabel{
-        {575, 10},
-        Positioning::LEFT,
-    };
-
-
-    Powder::Button stoneButton{
+    Powder::Button woodButton{
         {50, 50},
         {0,  50},
         Positioning::RIGHT,
     };
 
-    Powder::Text stoneLabel{
+    Powder::Text woodLabel{
         {575, 60},
+        Positioning::RIGHT,
+    };
+
+
+    Powder::Button stoneButton{
+        {50, 50},
+        {0,  100},
+        Positioning::RIGHT,
+    };
+
+    Powder::Text stoneLabel{
+        {575, 110},
         Positioning::LEFT,
     };
 
     Powder::Button plantButton{
         {50, 50 },
-        {0,  100},
+        {0,  150},
         Positioning::RIGHT,
     };
 
     Powder::Text plantLabel{
-        {575, 110},
+        {575, 160},
         Positioning::LEFT,
     };
 
     Powder::Button fireButton{
         {50, 50 },
-        {0,  150},
+        {0,  200},
         Positioning::RIGHT,
     };
 
     Powder::Text fireLabel{
-        {575, 160},
+        {575, 210},
         Positioning::LEFT,
     };
 
     Powder::Button waterButton{
         {50, 50 },
-        {0,  200},
+        {0,  250},
         Positioning::RIGHT,
     };
 
     Powder::Text waterLabel{
-        {575, 210},
+        {575, 260},
         Positioning::LEFT,
     };
 
@@ -95,6 +100,8 @@ int main()
     waterButton.element = Powder::Physics::Water{};
     waterButton.setColor(sf::Color::Blue);
 
+
+    elementSelect.setText("Select Element");
     woodLabel.setText("Wood");
     stoneLabel.setText("Stone");
     plantLabel.setText("Plant");
@@ -251,6 +258,7 @@ int main()
         fireButton.tick(window);
         waterButton.tick(window);
 
+        elementSelect.tick(window);
         woodLabel.tick(window);
         stoneLabel.tick(window);
         plantLabel.tick(window);
