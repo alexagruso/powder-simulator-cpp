@@ -34,8 +34,8 @@ int main()
         Positioning::RIGHT,
     };
 
-    Powder::Text boiler{
-        {100, 0},
+    Powder::Text woodLabel{
+        {575, 10},
         Positioning::LEFT,
     };
 
@@ -46,10 +46,20 @@ int main()
         Positioning::RIGHT,
     };
 
+    Powder::Text stoneLabel{
+        {575, 60},
+        Positioning::LEFT,
+    };
+
     Powder::Button plantButton{
         {50, 50 },
         {0,  100},
         Positioning::RIGHT,
+    };
+
+    Powder::Text plantLabel{
+        {575, 110},
+        Positioning::LEFT,
     };
 
     Powder::Button fireButton{
@@ -58,10 +68,20 @@ int main()
         Positioning::RIGHT,
     };
 
+    Powder::Text fireLabel{
+        {575, 160},
+        Positioning::LEFT,
+    };
+
     Powder::Button waterButton{
         {50, 50 },
         {0,  200},
         Positioning::RIGHT,
+    };
+
+    Powder::Text waterLabel{
+        {575, 210},
+        Positioning::LEFT,
     };
 
     woodButton.element = Powder::Physics::Wood{};
@@ -75,6 +95,11 @@ int main()
     waterButton.element = Powder::Physics::Water{};
     waterButton.setColor(sf::Color::Blue);
 
+    woodLabel.setText("Wood");
+    stoneLabel.setText("Stone");
+    plantLabel.setText("Plant");
+    fireLabel.setText("Fire");
+    waterLabel.setText("Water");
 
     sf::RenderWindow window{
         sf::VideoMode{Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT},
@@ -226,7 +251,11 @@ int main()
         fireButton.tick(window);
         waterButton.tick(window);
 
-        boiler.tick(window);
+        woodLabel.tick(window);
+        stoneLabel.tick(window);
+        plantLabel.tick(window);
+        fireLabel.tick(window);
+        waterLabel.tick(window);
 
         board.resetBoardState();
 

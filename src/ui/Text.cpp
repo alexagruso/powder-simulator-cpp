@@ -5,6 +5,7 @@
 #include "util/Overloaded.hpp"
 #include "ui/Positioning.hpp"
 #include <iostream>
+#include <string>
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -27,10 +28,12 @@ namespace Powder
         this->text.setFillColor(sf::Color::White);
         this->text.setString("Hello World.");
         this->text.setCharacterSize(24);
-        sf::Font font;
-        //if(!font.loadFromFile("ui/font/arial.ttf")){
-            //Print an error
-        //}
+
+        if(!font.loadFromFile("queensidesmedium.ttf")){
+            // Error
+        }
+
+        this->text.setFont(font);
 
         // positioning logic
 
@@ -43,6 +46,11 @@ namespace Powder
     void Text::setColor(sf::Color color)
     {
         this->text.setFillColor(color);
+    }
+
+    void Text::setText(string name)
+    {
+        this->text.setString(name);
     }
 
     void Text::tick(sf::RenderWindow& window)
