@@ -31,7 +31,7 @@
 *.out
 *.app
 powdersim
-powdersim_tests
+unit_tests
 
 # CMake
 CMakeLists.txt.user
@@ -48,3 +48,6 @@ _deps
 
 # clangd
 .cache
+
+# editor
+.vscode
