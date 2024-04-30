@@ -1,7 +1,7 @@
 #ifndef POWDER_INPUT_MANAGER
 #define POWDER_INPUT_MANAGER
 
-#include "application/Event.hpp"
+#include "application/events/InputEvent.hpp"
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>

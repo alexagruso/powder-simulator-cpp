@@ -1,8 +1,8 @@
 #ifndef POWDER_APPLICATION
 #define POWDER_APPLICATION
 
-#include "application/Event.hpp"
 #include "application/InputManager.hpp"
+#include "application/events/Event.hpp"
 #include "ui/Entity.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -23,7 +23,7 @@ struct Application
   private:
     sf::RenderWindow* window;
     std::stack<Event*> events; //  TODO: make this a priority queue
-    std::vector<Entity*> entities;
+    std::vector<UIEntity*> entities;
 
     InputManager inputManager;
 

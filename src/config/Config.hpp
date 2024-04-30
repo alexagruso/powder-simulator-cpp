@@ -1,8 +1,6 @@
 #ifndef POWDER_CONFIG
 #define POWDER_CONFIG
 
-#include "physics/Element.hpp"
-
 #include <SFML/Graphics/Color.hpp>
 
 #include <string>
@@ -13,7 +11,7 @@ namespace Powder::Config
 const uint WINDOW_WIDTH = 800;
 const uint WINDOW_HEIGHT = 600;
 
-const uint FRAMERATE_LIMIT = 30;
+const uint FRAMERATE_LIMIT = 60;
 
 const std::string WINDOW_TITLE = "Powder Simulator";
 

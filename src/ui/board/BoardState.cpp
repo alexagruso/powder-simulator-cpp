@@ -2,6 +2,7 @@
 
 #include "physics/Element.hpp"
 #include "physics/Particle.hpp"
+#include "ui/board/BoardController.hpp"
 
 #include <SFML/System/Vector2.hpp>
 
@@ -21,9 +22,9 @@ BoardState::BoardState(const BoardState& boardState) : dimensions{boardState.dim
     std::vector<BoardParticle> emptyRow{dimensions.x, std::nullopt};
     this->particles = BoardArray{dimensions.y, emptyRow};
 
-    for (uint row = 0; row < this->dimensions.x; row++)
+    for (uint row = 0; row < this->dimensions.y; row++)
     {
-        for (uint column = 0; column < this->dimensions.y; column++)
+        for (uint column = 0; column < this->dimensions.x; column++)
         {
             if (auto checkParticle = boardState.particles.at(row).at(column))
             {
@@ -36,26 +37,26 @@ BoardState::BoardState(const BoardState& boardState) : dimensions{boardState.dim
 
 BoardState::~BoardState()
 {
-    for (std::vector<BoardParticle> row : this->particles)
-    {
-        for (BoardParticle particle : row)
-        {
-            if (particle)
-            {
-                delete particle.value();
-            }
-        }
-    }
+    // for (std::vector<BoardParticle> row : this->particles)
+    // {
+    //     for (BoardParticle particle : row)
+    //     {
+    //         if (particle)
+    //         {
+    //             delete particle.value();
+    //         }
+    //     }
+    // }
 }
 
 BoardParticle BoardState::at(sf::Vector2u position) const
 {
-    if (position.x >= this->dimensions.x || position.y >= this->dimensions.y)
+    if (this->isValidPosition(position))
     {
-        return std::nullopt;
+        return this->particles.at(position.y).at(position.x);
     }
 
-    return this->particles.at(position.y).at(position.x);
+    return std::nullopt;
 }
 
 void BoardState::replace(sf::Vector2u position, Physics::Particle* particle)
@@ -85,7 +86,7 @@ void BoardState::reset(sf::Vector2u position)
     this->particles.at(position.y).at(position.x) = std::nullopt;
 }
 
-bool BoardState::isValidPosition(sf::Vector2u position)
+bool BoardState::isValidPosition(sf::Vector2u position) const
 {
     return position.x >= 0 && position.x < this->dimensions.x && position.y >= 0 && position.y < this->dimensions.y;
 }

@@ -42,7 +42,7 @@ struct BoardState
     void reset(sf::Vector2u position);
 
     // checks if position is a valid board array index
-    bool isValidPosition(sf::Vector2u position);
+    bool isValidPosition(sf::Vector2u position) const;
 
   private:
     sf::Vector2u dimensions;

@@ -12,7 +12,6 @@ struct Element
 {
     virtual ~Element() {}
 
-    //  TODO: extract this into Element.cpp
     virtual sf::Color fillColor();
 
     template <typename ElementType>

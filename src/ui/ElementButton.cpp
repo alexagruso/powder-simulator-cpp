@@ -1,13 +1,13 @@
 #include "ElementButton.hpp"
 
 #include "EntityPositioning.hpp"
-#include "application/Event.hpp"
+#include "application/events/ChangeActiveElementEvent.hpp"
+#include "application/events/InputEvent.hpp"
 #include "physics/Element.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Window/Mouse.hpp>
 
-#include <iostream>
 #include <vector>
 
 using namespace Powder;
@@ -37,7 +37,7 @@ std::vector<Event*> ElementButton::handleEvent(Event* currentEvent)
     {
         auto event = check.value();
 
-        if (this->contains(event->mousePosition) && event->queryMouseButton(sf::Mouse::Left, InputStatus::PRESSED))
+        if (this->contains(event->getMousePosition()) && event->queryMouseButton(sf::Mouse::Left, InputStatus::PRESSED))
         {
             return {new ChangeActiveElementEvent{this->element}};
         }
@@ -46,7 +46,10 @@ std::vector<Event*> ElementButton::handleEvent(Event* currentEvent)
     return {};
 }
 
-void ElementButton::tick() {}
+// std::vector<Event*> ElementButton::tick()
+// {
+//     return {};
+// }
 
 std::vector<sf::Drawable*> ElementButton::render()
 {

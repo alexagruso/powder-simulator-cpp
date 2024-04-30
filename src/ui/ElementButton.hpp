@@ -15,15 +15,14 @@
 namespace Powder
 {
 
-struct ElementButton : Entity
+struct ElementButton : UIEntity
 {
     ElementButton(sf::Vector2u size, sf::Vector2i position, EntityPositioning positioning, Physics::Element* element);
     ~ElementButton();
 
-    std::vector<Event*> handleEvent(Event* event);
-
-    void tick();
-    std::vector<sf::Drawable*> render();
+    std::vector<Event*> handleEvent(Event* event) override;
+    // std::vector<Event*> tick() override;
+    std::vector<sf::Drawable*> render() override;
 
   private:
     sf::Vector2f size;

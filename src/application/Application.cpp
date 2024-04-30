@@ -1,6 +1,6 @@
 #include "Application.hpp"
 
-#include "application/Event.hpp"
+#include "application/events/ApplicationExitEvent.hpp"
 #include "config/Config.hpp"
 #include "physics/Element.hpp"
 #include "ui/ElementButton.hpp"
@@ -11,6 +11,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include <iostream>
 #include <vector>
 
 using namespace Powder;
@@ -56,7 +57,7 @@ Application::~Application()
 {
     delete this->window;
 
-    for (Entity* entity : this->entities)
+    for (UIEntity* entity : this->entities)
     {
         delete entity;
     }
@@ -124,6 +125,8 @@ void Application::tick()
         Event* currentEvent = this->events.top();
         this->events.pop();
 
+        std::cout << currentEvent->staticPriority() << '\n';
+
         // Global application events are handled first
         if (Event::isOfType<ApplicationExitEvent>(currentEvent))
         {
@@ -142,7 +145,7 @@ void Application::tick()
         }
 
         // Handle events for each entity
-        for (Entity* entity : this->entities)
+        for (UIEntity* entity : this->entities)
         {
             auto newEvents = entity->handleEvent(currentEvent);
 
@@ -152,11 +155,11 @@ void Application::tick()
             }
         }
 
-        delete currentEvent;
+        // delete currentEvent;
     }
 
     // compute logic for each entity
-    for (Entity* entity : entities)
+    for (UIEntity* entity : entities)
     {
         entity->tick();
     }
@@ -165,7 +168,7 @@ void Application::tick()
     std::vector<sf::Drawable*> draws;
 
     // render all entities
-    for (Entity* entity : entities)
+    for (UIEntity* entity : entities)
     {
         auto entityDraws = entity->render();
         draws.insert(draws.end(), entityDraws.begin(), entityDraws.end());

@@ -13,6 +13,9 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 # ;main.cpp adds driver file to target
 add_executable(${EXECUTABLE_NAME} "${SOURCES}")
 
+# enable maximum warnings
+target_compile_options(${EXECUTABLE_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+
 # looks in src/ for include directories
 target_include_directories(${EXECUTABLE_NAME} PRIVATE "src")
 

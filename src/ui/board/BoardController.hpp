@@ -19,11 +19,11 @@ struct BoardController
     void processPhysics();
 
     Physics::Element* activeElement;
-    BoardState boardState;
 
   private:
     sf::Vector2u dimensions;
     Physics::Element* initialActiveElement;
+    BoardState boardState;
 
     PhysicsEvents physicsEvents;
 };

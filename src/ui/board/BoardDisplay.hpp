@@ -13,14 +13,13 @@
 namespace Powder::UI
 {
 
-struct BoardDisplay : Entity
+struct BoardDisplay : UIEntity
 {
     BoardDisplay(sf::Vector2u dimensions);
-    ~BoardDisplay();
+    ~BoardDisplay() {}
 
     std::vector<Event*> handleEvent(Event* event) override;
-
-    void tick() override;
+    std::vector<Event*> tick() override;
     std::vector<sf::Drawable*> render() override;
 
   private:

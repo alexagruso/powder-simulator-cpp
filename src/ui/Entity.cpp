@@ -1,6 +1,6 @@
 #include "Entity.hpp"
 
-#include "application/Event.hpp"
+#include "util/documentation.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 
@@ -8,14 +8,19 @@
 
 using namespace Powder;
 
-std::vector<Event*> Entity::handleEvent(Event* event)
+std::vector<Event*> UIEntity::handleEvent(Event* event)
+{
+    UNUSED(event)
+
+    return {};
+}
+
+std::vector<Event*> UIEntity::tick()
 {
     return {};
 }
 
-void Entity::tick() {}
-
-std::vector<sf::Drawable*> Entity::render()
+std::vector<sf::Drawable*> UIEntity::render()
 {
     return {};
 }

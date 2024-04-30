@@ -1,6 +1,7 @@
 #include "BoardDisplay.hpp"
 
-#include "application/Event.hpp"
+#include "application/events/ChangeActiveElementEvent.hpp"
+#include "application/events/InputEvent.hpp"
 #include "config/Config.hpp"
 #include "physics/Element.hpp"
 #include "physics/Particle.hpp"
@@ -29,7 +30,7 @@ std::vector<Event*> BoardDisplay::handleEvent(Event* event)
 
         if (event->queryMouseButton(sf::Mouse::Left, InputStatus::HELD))
         {
-            if (auto checkPosition = this->mouseToBoardPosition(event->mousePosition))
+            if (auto checkPosition = this->mouseToBoardPosition(event->getMousePosition()))
             {
                 auto fillPosition = checkPosition.value();
                 this->boardController.boardState.fill(fillPosition,
@@ -41,9 +42,12 @@ std::vector<Event*> BoardDisplay::handleEvent(Event* event)
     return {};
 }
 
-void BoardDisplay::tick()
+std::vector<Event*> BoardDisplay::tick()
 {
+    //  TODO: make processPhysics return event list
     this->boardController.processPhysics();
+
+    return {};
 }
 
 std::vector<sf::Drawable*> BoardDisplay::render()
