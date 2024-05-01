@@ -51,3 +51,7 @@ _deps
 
 # editor
 .vscode
+
+#doxygen
+html
+latex
