@@ -19,6 +19,9 @@ file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp")
 # generates project executable
 add_executable(${PROJECT_EXECUTABLE} "${PROJECT_SOURCES}")
 
+# enable maximum warnings
+target_compile_options(${PROJECT_EXECUTABLE} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+
 # searches src/ for header files included in the project
 target_include_directories(${PROJECT_EXECUTABLE} PRIVATE "src")
 

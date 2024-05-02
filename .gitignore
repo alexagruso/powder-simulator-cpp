@@ -51,3 +51,6 @@ _deps
 
 # editor
 .vscode
+
+# doxygen output
+docs/html

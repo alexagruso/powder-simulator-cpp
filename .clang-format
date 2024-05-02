@@ -4,12 +4,13 @@ AccessModifierOffset: -2
 AlignAfterOpenBracket: Align
 AlignArrayOfStructures: Left
 AlignTrailingComments: Always
-AllowShortBlocksOnASingleLine: Always
+AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: True
 AllowShortEnumsOnASingleLine: True
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: Empty
+AlwaysBreakTemplateDeclarations: Yes
 BreakBeforeBraces: Allman
 ColumnLimit: 120
 IncludeBlocks: Regroup

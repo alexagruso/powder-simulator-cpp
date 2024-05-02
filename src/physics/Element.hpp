@@ -1,9 +1,10 @@
-#ifndef ELEMENT
-#define ELEMENT
+#ifndef POWDER_ELEMENT
+#define POWDER_ELEMENT
 
 #include <SFML/Graphics/Color.hpp>
 
-#include <variant>
+#include <optional>
+#include <sys/types.h>
 
 enum class ElementType
 {
@@ -16,39 +17,57 @@ enum class ElementType
 namespace Powder::Physics
 {
 
-struct Plant
+struct Element
 {
-    sf::Color fillColor = sf::Color::Green;
-    ElementType type = ElementType::SOLID;
+    virtual ~Element() {}
+
+    virtual sf::Color fillColor();
+    virtual uint staticWeight();
+
+    template <typename ElementType>
+    static std::optional<ElementType*> isOfType(Element* element)
+    {
+        ElementType* result = dynamic_cast<ElementType*>(element);
+
+        if (result != nullptr)
+        {
+            return result;
+        }
+
+        return std::nullopt;
+    }
 };
 
-struct Fire
+struct Fire : Element
 {
-    sf::Color fillColor = sf::Color::Red;
-    ElementType type = ElementType::GAS;
+    sf::Color fillColor() override;
+    uint staticWeight() override;
 };
 
-struct Wood
+struct Plant : Element
 {
-    sf::Color fillColor = sf::Color::Yellow;
-    ElementType type = ElementType::SOLID;
+    sf::Color fillColor() override;
+    uint staticWeight() override;
 };
 
-struct Stone
+struct Wood : Element
 {
-    sf::Color fillColor = sf::Color::White;
-    ElementType type = ElementType::POWDER;
+    sf::Color fillColor() override;
+    uint staticWeight() override;
 };
 
-struct Water
+struct Stone : Element
 {
-    sf::Color fillColor = sf::Color::Blue;
-    ElementType type = ElementType::LIQUID;
+    sf::Color fillColor() override;
+    uint staticWeight() override;
 };
 
-// HACK: janky
-using Element = std::variant<Wood, Stone, Plant, Fire, Water>;
+struct Water : Element
+{
+    sf::Color fillColor() override;
+    uint staticWeight() override;
+};
 
 } // namespace Powder::Physics
 
-#endif // ELEMENT
+#endif // POWDER_ELEMENT
