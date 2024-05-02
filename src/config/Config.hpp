@@ -1,13 +1,19 @@
+<<<<<<< HEAD
 #ifndef POWDER_CONFIG
 #define POWDER_CONFIG
 
 #include <SFML/Graphics/Color.hpp>
+=======
+#ifndef CONFIG
+#define CONFIG
+>>>>>>> main
 
 #include <string>
 
 namespace Powder::Config
 {
 
+<<<<<<< HEAD
 const uint WINDOW_WIDTH = 800;
 const uint WINDOW_HEIGHT = 600;
 
@@ -31,3 +37,15 @@ const uint BRUSH_RADIUS = 2;
 } // namespace Powder::Config
 
 #endif // POWDER_CONFIG
+=======
+const unsigned int WINDOW_WIDTH = 800;
+const unsigned int WINDOW_HEIGHT = 600;
+
+const unsigned int FRAMERATE_LIMIT = 60;
+
+const std::string WINDOW_TITLE = "Powder Simulator";
+
+} // namespace Powder::Config
+
+#endif // CONFIG
+>>>>>>> main
