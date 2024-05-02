@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Color.hpp>
 
 #include <optional>
+#include <sys/types.h>
 
 namespace Powder::Physics
 {
@@ -13,6 +14,7 @@ struct Element
     virtual ~Element() {}
 
     virtual sf::Color fillColor();
+    virtual uint staticWeight();
 
     template <typename ElementType>
     static std::optional<ElementType*> isOfType(Element* element)
@@ -31,30 +33,32 @@ struct Element
 struct Fire : Element
 {
     sf::Color fillColor() override;
+    uint staticWeight() override;
 };
-
-//  TODO: extract these into separate files
 
 struct Plant : Element
 {
     sf::Color fillColor() override;
+    uint staticWeight() override;
 };
 
-// struct Wood : Element
-// {
-//     sf::Color fillColor() final
-//     {
-//         return sf::Color::Yellow;
-//     }
-// };
-//
-// struct Stone : Element
-// {
-//     sf::Color fillColor()
-//     {
-//         return sf::Color::White;
-//     }
-// };
+struct Wood : Element
+{
+    sf::Color fillColor() override;
+    uint staticWeight() override;
+};
+
+struct Stone : Element
+{
+    sf::Color fillColor() override;
+    uint staticWeight() override;
+};
+
+struct Water : Element
+{
+    sf::Color fillColor() override;
+    uint staticWeight() override;
+};
 
 } // namespace Powder::Physics
 

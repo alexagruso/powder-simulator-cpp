@@ -8,7 +8,6 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Window/Mouse.hpp>
 
-#include <iostream>
 #include <vector>
 
 using namespace Powder;
@@ -52,9 +51,9 @@ std::vector<Event*> ElementButton::handleEvent(Event* currentEvent)
 //     return {};
 // }
 
-std::vector<sf::Drawable*> ElementButton::render()
+void ElementButton::render(sf::RenderWindow* window)
 {
-    return {this->body};
+    window->draw(*this->body);
 }
 
 bool ElementButton::contains(sf::Vector2i mousePosition) const

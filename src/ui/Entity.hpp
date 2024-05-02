@@ -4,6 +4,7 @@
 #include "application/events/Event.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 #include <vector>
 
@@ -16,7 +17,7 @@ struct UIEntity
 
     virtual std::vector<Event*> handleEvent(Event* event);
     virtual std::vector<Event*> tick();
-    virtual std::vector<sf::Drawable*> render();
+    virtual void render(sf::RenderWindow* window);
 
     // This must be defined per class because dynamic_cast requires a pointer to a polymorphic object
     template <typename CheckType>

@@ -22,7 +22,7 @@ struct ElementButton : UIEntity
 
     std::vector<Event*> handleEvent(Event* event) override;
     // std::vector<Event*> tick() override;
-    std::vector<sf::Drawable*> render() override;
+    void render(sf::RenderWindow* window) override;
 
   private:
     sf::Vector2f size;

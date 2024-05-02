@@ -20,7 +20,7 @@ std::vector<Event*> UIEntity::tick()
     return {};
 }
 
-std::vector<sf::Drawable*> UIEntity::render()
+void UIEntity::render(sf::RenderWindow* window)
 {
-    return {};
+    UNUSED(window)
 }

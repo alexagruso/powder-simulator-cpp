@@ -43,8 +43,35 @@ Application::Application()
         positioning, new Physics::Plant{}
     };
 
+    ElementButton* woodButton = new ElementButton{
+        {50, 50},
+        {300, 100},
+        positioning, new Physics::Wood{}
+    };
+
+    ElementButton* stoneButton = new ElementButton{
+        {50, 50},
+        {300, 150},
+        positioning, new Physics::Stone{}
+    };
+
+    ElementButton* waterButton = new ElementButton{
+        {50, 50},
+        {300, 200},
+        positioning, new Physics::Water{}
+    };
+
+    UI::BoardDisplay* board = new UI::BoardDisplay{
+        {100, 100},
+        new Physics::Fire{},
+    };
+
     this->entities.push_back(fireButton);
     this->entities.push_back(plantButton);
+    this->entities.push_back(woodButton);
+    this->entities.push_back(stoneButton);
+    this->entities.push_back(waterButton);
+    this->entities.push_back(board);
 }
 
 Application::~Application()
@@ -154,22 +181,20 @@ void Application::tick()
     // compute logic for each entity
     for (UIEntity* entity : entities)
     {
-        entity->tick();
+        std::vector<Event*> newEvents = entity->tick();
+
+        for (Event* event : newEvents)
+        {
+            this->events.push(event);
+        }
     }
 
     this->window->clear(Config::WINDOW_CLEAR_COLOR);
-    std::vector<sf::Drawable*> draws;
 
     // render all entities
     for (UIEntity* entity : entities)
     {
-        auto entityDraws = entity->render();
-        draws.insert(draws.end(), entityDraws.begin(), entityDraws.end());
-    }
-
-    for (auto draw : draws)
-    {
-        this->window->draw(*draw);
+        entity->render(this->window);
     }
 
     this->window->display();
