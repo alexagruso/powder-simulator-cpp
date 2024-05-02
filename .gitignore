@@ -47,3 +47,6 @@ _deps
 
 # clangd
 .cache
+
+# doxygen output
+docs/html
