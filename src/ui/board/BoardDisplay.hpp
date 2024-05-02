@@ -36,7 +36,7 @@ struct BoardDisplay : UIEntity
 
     bool isValidBoardPosition(sf::Vector2i position) const;
     std::optional<sf::Vector2u> mouseToBoardPosition(sf::Vector2i mousePosition) const;
-    bool canSwap(sf::Vector2u target) const;
+    bool canSwap(sf::Vector2u origin, sf::Vector2i target) const;
     std::optional<std::vector<Event*>> attemptDirections(sf::Vector2u origin, std::vector<sf::Vector2i> directions,
                                                          Physics::Element* element);
 };

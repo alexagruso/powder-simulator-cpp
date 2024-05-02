@@ -5,9 +5,11 @@
 #include "application/events/InputEvent.hpp"
 #include "application/events/ParticleCreationEvent.hpp"
 #include "application/events/ParticleDeletionEvent.hpp"
+#include "application/events/ParticleSwapEvent.hpp"
 #include "config/Config.hpp"
 #include "physics/Element.hpp"
 #include "physics/Particle.hpp"
+#include "util/documentation.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -100,6 +102,28 @@ std::vector<Powder::Event*> BoardDisplay::handleEvent(Event* event)
                 {static_cast<int>(particleCreation->position.x), static_cast<int>(particleCreation->position.y)}))
         {
             this->particles.set(particleCreation->position, Physics::Particle{particleCreation->element});
+        }
+    }
+    else if (auto checkEvent = Event::isOfType<ParticleSwapEvent>(event))
+    {
+        auto particleSwap = checkEvent.value();
+
+        if (isValidBoardPosition(
+                {static_cast<int>(particleSwap->origin.x), static_cast<int>(particleSwap->origin.y)}) &&
+            isValidBoardPosition({static_cast<int>(particleSwap->target.x), static_cast<int>(particleSwap->target.y)}))
+        {
+            if (!this->particles.at(particleSwap->target))
+            {
+                this->particles.set(particleSwap->target,
+                                    Physics::Particle{this->particles.at(particleSwap->origin).value().element});
+                this->particles.reset(particleSwap->origin);
+            }
+            else
+            {
+                Physics::Particle temp = this->particles.at(particleSwap->target).value();
+                this->particles.set(particleSwap->target, this->particles.at(particleSwap->origin).value());
+                this->particles.set(particleSwap->origin, temp);
+            }
         }
     }
     else if (auto checkEvent = Event::isOfType<ParticleDeletionEvent>(event))
@@ -264,22 +288,56 @@ std::optional<sf::Vector2u> BoardDisplay::mouseToBoardPosition(sf::Vector2i mous
     return std::nullopt;
 }
 
-bool BoardDisplay::canSwap(sf::Vector2u target) const
+bool BoardDisplay::canSwap(sf::Vector2u origin, sf::Vector2i target) const
 {
-    return this->mouseToBoardPosition({(int) target.x, (int) target.y}) != std::nullopt &&
-           target.x < this->particles.dimensions.x && target.y < this->particles.dimensions.y &&
-           this->particles.at(target) == std::nullopt && !this->particleReservations.at(target.y).at(target.x);
+    if (this->isValidBoardPosition(target))
+    {
+        if (this->particles.at({static_cast<uint>(target.x), static_cast<uint>(target.y)}) == std::nullopt &&
+            !this->particleReservations.at(target.y).at(target.x))
+        {
+            return true;
+        }
+        else
+        {
+            uint originWeight;
+            uint targetWeight;
+
+            if (auto checkOrigin = this->particles.at(origin))
+            {
+                originWeight = checkOrigin.value().element->staticWeight();
+            }
+            else
+            {
+                return false;
+            }
+
+            if (auto checkTarget = this->particles.at({static_cast<uint>(target.x), static_cast<uint>(target.y)}))
+            {
+                targetWeight = checkTarget.value().element->staticWeight();
+            }
+            else
+            {
+                return false;
+            }
+
+            return originWeight > targetWeight;
+        }
+    }
+
+    return false;
 }
 
 std::optional<std::vector<Powder::Event*>>
 BoardDisplay::attemptDirections(sf::Vector2u origin, std::vector<sf::Vector2i> directions, Physics::Element* element)
 {
+    UNUSED(element)
+
     std::vector<Powder::Event*> newEvents{};
     std::vector<sf::Vector2u> movementCandidates{};
 
     for (const sf::Vector2i& direction : directions)
     {
-        if (this->canSwap({origin.x + direction.x, origin.y + direction.y}))
+        if (this->canSwap(origin, {static_cast<int>(origin.x) + direction.x, static_cast<int>(origin.y) + direction.y}))
         {
             movementCandidates.push_back(
                 {static_cast<uint>(origin.x + direction.x), static_cast<uint>(origin.y + direction.y)});
@@ -293,8 +351,9 @@ BoardDisplay::attemptDirections(sf::Vector2u origin, std::vector<sf::Vector2i> d
         std::uniform_int_distribution<int> direction{0, candidateCount - 1};
         int result = direction(this->randomEngine);
 
-        newEvents.push_back(new ParticleDeletionEvent{origin});
-        newEvents.push_back(new ParticleCreationEvent{movementCandidates.at(result), element});
+        newEvents.push_back(new ParticleSwapEvent{origin, movementCandidates.at(result)});
+        // newEvents.push_back(new ParticleDeletionEvent{origin});
+        // newEvents.push_back(new ParticleCreationEvent{movementCandidates.at(result), element});
         this->particleReservations.at(movementCandidates.at(result).y).at(movementCandidates.at(result).x) = true;
 
         return newEvents;
