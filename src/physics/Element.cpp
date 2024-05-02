@@ -31,12 +31,12 @@ sf::Color Plant::fillColor()
 
 uint Plant::staticWeight()
 {
-    return 20;
+    return 30;
 }
 
 sf::Color Wood::fillColor()
 {
-    return sf::Color::Yellow;
+    return sf::Color{222, 184, 135};
 }
 
 uint Wood::staticWeight()
@@ -46,7 +46,7 @@ uint Wood::staticWeight()
 
 sf::Color Stone::fillColor()
 {
-    return sf::Color::White;
+    return sf::Color{189, 202, 203};
 }
 
 uint Stone::staticWeight()
@@ -62,4 +62,34 @@ sf::Color Water::fillColor()
 uint Water::staticWeight()
 {
     return 5;
+}
+
+sf::Color Oil::fillColor()
+{
+    return sf::Color{59, 49, 49};
+}
+
+uint Oil::staticWeight()
+{
+    return 4;
+}
+
+sf::Color Metal::fillColor()
+{
+    return sf::Color{59, 69, 69};
+}
+
+uint Metal::staticWeight()
+{
+    return 20;
+}
+
+sf::Color Acid::fillColor()
+{
+    return sf::Color{38, 216, 64};
+}
+
+uint Acid::staticWeight()
+{
+    return 25;
 }

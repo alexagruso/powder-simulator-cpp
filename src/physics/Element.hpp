@@ -68,6 +68,24 @@ struct Water : Element
     uint staticWeight() override;
 };
 
+struct Oil : Element
+{
+    sf::Color fillColor() override;
+    uint staticWeight() override;
+};
+
+struct Metal : Element
+{
+    sf::Color fillColor() override;
+    uint staticWeight() override;
+};
+
+struct Acid : Element
+{
+    sf::Color fillColor() override;
+    uint staticWeight() override;
+};
+
 } // namespace Powder::Physics
 
 #endif // POWDER_ELEMENT

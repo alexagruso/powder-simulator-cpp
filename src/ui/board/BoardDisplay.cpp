@@ -212,6 +212,70 @@ std::vector<Powder::Event*> BoardDisplay::tick()
                         continue;
                     }
                 }
+                else if (auto checkOil = Physics::Element::isOfType<Physics::Oil>(checkParticle.value().element))
+                {
+                    if (auto checkEvents = attemptDirections(
+                            {
+                                column, row
+                    },
+                            {{0, 1}}, checkParticle.value().element))
+                    {
+                        newEvents.insert(newEvents.end(), checkEvents.value().begin(), checkEvents.value().end());
+                        continue;
+                    }
+
+                    if (auto checkEvents = attemptDirections(
+                            {
+                                column, row
+                    },
+                            {{1, 1}, {-1, 1}}, checkParticle.value().element))
+                    {
+                        newEvents.insert(newEvents.end(), checkEvents.value().begin(), checkEvents.value().end());
+                        continue;
+                    }
+
+                    if (auto checkEvents = attemptDirections(
+                            {
+                                column, row
+                    },
+                            {{0, 0}, {1, 0}, {-1, 0}}, checkParticle.value().element))
+                    {
+                        newEvents.insert(newEvents.end(), checkEvents.value().begin(), checkEvents.value().end());
+                        continue;
+                    }
+                }
+                else if (auto checkAcid = Physics::Element::isOfType<Physics::Acid>(checkParticle.value().element))
+                {
+                    if (auto checkEvents = attemptDirections(
+                            {
+                                column, row
+                    },
+                            {{0, 1}}, checkParticle.value().element))
+                    {
+                        newEvents.insert(newEvents.end(), checkEvents.value().begin(), checkEvents.value().end());
+                        continue;
+                    }
+
+                    if (auto checkEvents = attemptDirections(
+                            {
+                                column, row
+                    },
+                            {{1, 1}, {-1, 1}}, checkParticle.value().element))
+                    {
+                        newEvents.insert(newEvents.end(), checkEvents.value().begin(), checkEvents.value().end());
+                        continue;
+                    }
+
+                    if (auto checkEvents = attemptDirections(
+                            {
+                                column, row
+                    },
+                            {{0, 0}, {1, 0}, {-1, 0}}, checkParticle.value().element))
+                    {
+                        newEvents.insert(newEvents.end(), checkEvents.value().begin(), checkEvents.value().end());
+                        continue;
+                    }
+                }
             }
         }
     }

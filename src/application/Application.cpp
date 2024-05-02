@@ -4,6 +4,8 @@
 #include "config/Config.hpp"
 #include "physics/Element.hpp"
 #include "ui/ElementButton.hpp"
+#include "ui/Positioning.hpp"
+#include "ui/Text.hpp"
 #include "ui/board/BoardDisplay.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
@@ -33,44 +35,89 @@ Application::Application()
     //  TODO: this is temporary, make separate UI handler
     ElementButton* fireButton = new ElementButton{
         {50, 50},
-        {300, 0},
+        {750, 0},
         positioning, new Physics::Fire{}
     };
 
+    Text* fireButtonLabel = new Text({650, 10}, "Fire", Positioning::LEFT);
+
     ElementButton* plantButton = new ElementButton{
         {50, 50},
-        {300, 50},
+        {750, 50},
         positioning, new Physics::Plant{}
     };
 
+    Text* plantButtonLabel = new Text({650, 60}, "Plant", Positioning::LEFT);
+
     ElementButton* woodButton = new ElementButton{
         {50, 50},
-        {300, 100},
+        {750, 100},
         positioning, new Physics::Wood{}
     };
 
+    Text* woodButtonLabel = new Text({650, 110}, "Wood", Positioning::LEFT);
+
     ElementButton* stoneButton = new ElementButton{
         {50, 50},
-        {300, 150},
+        {750, 150},
         positioning, new Physics::Stone{}
     };
 
+    Text* stoneButtonLabel = new Text({650, 160}, "Stone", Positioning::LEFT);
+
     ElementButton* waterButton = new ElementButton{
         {50, 50},
-        {300, 200},
+        {750, 200},
         positioning, new Physics::Water{}
     };
 
+    Text* waterButtonLabel = new Text({650, 210}, "Water", Positioning::LEFT);
+
+    ElementButton* oilButton = new ElementButton{
+        {50, 50},
+        {750, 250},
+        positioning, new Physics::Oil{}
+    };
+
+    Text* oilButtonLabel = new Text({650, 260}, "Oil", Positioning::LEFT);
+
+    ElementButton* metalButton = new ElementButton{
+        {50, 50},
+        {750, 300},
+        positioning, new Physics::Metal{}
+    };
+
+    Text* metalButtonLabel = new Text({650, 310}, "Metal", Positioning::LEFT);
+
+    ElementButton* acidButton = new ElementButton{
+        {50, 50},
+        {750, 350},
+        positioning, new Physics::Acid{}
+    };
+
+    Text* acidButtonLabel = new Text({650, 360}, "Acid", Positioning::LEFT);
+
     UI::BoardDisplay* board = new UI::BoardDisplay{
-        {100, 100},
+        {150, 150},
         new Physics::Fire{},
     };
 
     this->entities.push_back(fireButton);
+    this->entities.push_back(fireButtonLabel);
     this->entities.push_back(plantButton);
+    this->entities.push_back(plantButtonLabel);
     this->entities.push_back(woodButton);
+    this->entities.push_back(woodButtonLabel);
     this->entities.push_back(stoneButton);
+    this->entities.push_back(stoneButtonLabel);
     this->entities.push_back(waterButton);
+    this->entities.push_back(waterButtonLabel);
+    this->entities.push_back(oilButton);
+    this->entities.push_back(oilButtonLabel);
+    this->entities.push_back(metalButton);
+    this->entities.push_back(metalButtonLabel);
+    this->entities.push_back(acidButton);
+    this->entities.push_back(acidButtonLabel);
     this->entities.push_back(board);
 }
 
