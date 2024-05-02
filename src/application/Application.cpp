@@ -11,7 +11,6 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 
-#include <iostream>
 #include <vector>
 
 using namespace Powder;
@@ -44,13 +43,8 @@ Application::Application()
         positioning, new Physics::Plant{}
     };
 
-    UI::BoardDisplay* board = new UI::BoardDisplay{
-        {Config::BOARD_WIDTH, Config::BOARD_HEIGHT}
-    };
-
     this->entities.push_back(fireButton);
     this->entities.push_back(plantButton);
-    this->entities.push_back(board);
 }
 
 Application::~Application()
@@ -110,22 +104,22 @@ void Application::tick()
                 this->inputManager.processMouseMovement({systemEvent.mouseMove.x, systemEvent.mouseMove.y});
                 break;
             }
+            case sf::Event::MouseWheelScrolled:
+            {
+                //  TODO: add mouse wheel scroll to input manager
+                break;
+            }
             default: break;
         }
     }
 
-    this->events.push(this->inputManager.inputStatus);
-
-    // the old input event pointer is moved into the event stack, then deleted when the events are processed.
-    // before this happens, the input manager copies into a new input event instance
-    this->inputManager.reset();
+    // Clones the input status into a new input event
+    this->events.push(this->inputManager.inputStatus->clone());
 
     while (!this->events.empty())
     {
         Event* currentEvent = this->events.top();
         this->events.pop();
-
-        std::cout << currentEvent->staticPriority() << '\n';
 
         // Global application events are handled first
         if (Event::isOfType<ApplicationExitEvent>(currentEvent))
@@ -139,12 +133,11 @@ void Application::tick()
 
             if (event->queryKey(sf::Keyboard::Escape, InputStatus::PRESSED))
             {
-                this->window->close();
-                this->exiting = true;
+                this->events.push(new ApplicationExitEvent{});
             }
         }
 
-        // Handle events for each entity
+        // Handle events for each UI entity
         for (UIEntity* entity : this->entities)
         {
             auto newEvents = entity->handleEvent(currentEvent);
@@ -155,7 +148,7 @@ void Application::tick()
             }
         }
 
-        // delete currentEvent;
+        delete currentEvent;
     }
 
     // compute logic for each entity
@@ -180,4 +173,7 @@ void Application::tick()
     }
 
     this->window->display();
+
+    // reset input status but maintain HELD and IDLE statuses across frames
+    this->inputManager.reset();
 }

@@ -8,6 +8,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Window/Mouse.hpp>
 
+#include <iostream>
 #include <vector>
 
 using namespace Powder;

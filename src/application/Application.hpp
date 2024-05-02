@@ -22,10 +22,9 @@ struct Application
 
   private:
     sf::RenderWindow* window;
+    InputManager inputManager;
     std::stack<Event*> events; //  TODO: make this a priority queue
     std::vector<UIEntity*> entities;
-
-    InputManager inputManager;
 
     void tick();
 
