@@ -23,7 +23,7 @@
 using namespace Powder::UI;
 
 BoardDisplay::BoardDisplay(sf::Vector2u dimensions, Physics::Element* initialActiveElement)
-    : activeElement{initialActiveElement}, initialActiveElement{initialActiveElement}, particles{dimensions}
+    : particles{dimensions}, activeElement{initialActiveElement}, initialActiveElement{initialActiveElement}
 {
     std::vector<bool> emptyBoolRow(dimensions.x, false);
     this->particleReservations = std::vector<std::vector<bool>>{dimensions.y, emptyBoolRow};

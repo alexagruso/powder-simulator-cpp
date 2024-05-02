@@ -26,10 +26,11 @@ struct BoardDisplay : UIEntity
     std::vector<Event*> tick() override;
     void render(sf::RenderWindow* window) override;
 
+    Board<Physics::Particle> particles;
+
   private:
     Physics::Element* activeElement;
     Physics::Element* initialActiveElement;
-    Board<Physics::Particle> particles;
     std::vector<std::vector<bool>> particleReservations;
     std::vector<std::vector<bool>> brush;
     std::mt19937 randomEngine;

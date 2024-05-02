@@ -16,7 +16,13 @@ struct Board
 {
     Board(sf::Vector2u dimensions) : dimensions{dimensions}
     {
-        std::vector<std::optional<CellType>> emptyRow{dimensions.x, std::nullopt};
+        std::vector<std::optional<CellType>> emptyRow{};
+
+        for (uint i = 0; i < dimensions.x; i++)
+        {
+            emptyRow.push_back(std::nullopt);
+        }
+
         this->board = std::vector<std::vector<std::optional<CellType>>>{dimensions.y, emptyRow};
     }
 
