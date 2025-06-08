@@ -1,15 +1,23 @@
 #include "Board.hpp"
 
-#include "Config.hpp"
+#include "Particle.hpp"
+
+#include <optional>
 
 using namespace Powder;
 
-bool Board::at(uint x, uint y) const
+Board::Board(uint xSize, uint ySize) : width{xSize}, height{ySize}
+{
+    std::vector<OptParticle> emptyRow{width, std::nullopt};
+    this->board = std::vector<std::vector<OptParticle>>{height, emptyRow};
+}
+
+OptParticle Board::at(uint x, uint y) const
 {
     return this->board.at(y).at(x);
 }
 
-bool Board::set(uint x, uint y, bool value)
+bool Board::set(uint x, uint y, OptParticle value)
 {
     if (x >= this->width || y >= this->height)
     {
@@ -18,21 +26,6 @@ bool Board::set(uint x, uint y, bool value)
 
     this->board.at(y).at(x) = value;
     return true;
-}
-
-std::optional<std::pair<uint, uint>> Board::mouseToBoardPosition(int mouseX, int mouseY) const
-{
-    int xPosition = mouseX / Config::PARTICLE_PIXEL_SIZE;
-    int yPosition = mouseY / Config::PARTICLE_PIXEL_SIZE;
-
-    if (this->isValidBoardPosition(xPosition, yPosition))
-    {
-        return {
-            {static_cast<uint>(xPosition), static_cast<uint>(yPosition)}
-        };
-    }
-
-    return std::nullopt;
 }
 
 bool Board::isValidBoardPosition(int x, int y) const

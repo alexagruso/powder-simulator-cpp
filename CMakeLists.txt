@@ -27,7 +27,7 @@ target_include_directories(${PROJECT_EXECUTABLE} PRIVATE "src")
 include(FetchContent)
 FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 2.6.1
+    GIT_TAG 3.0.1
     GIT_SHALLOW ON
     EXCLUDE_FROM_ALL
     SYSTEM)

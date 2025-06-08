@@ -1,7 +1,7 @@
 #include "Application.hpp"
 
 #include "BoardDisplay.hpp"
-#include "Config.hpp"
+#include "ConfigManager.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -11,15 +11,13 @@
 
 using namespace Powder;
 
-Application::Application()
+Application::Application(const std::string& configFilePath) : config(configFilePath)
 {
-    this->window = new sf::RenderWindow{
-        sf::VideoMode{Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT},
-        Config::WINDOW_TITLE, sf::Style::Default
-    };
+    this->window = new sf::RenderWindow{sf::VideoMode{{config.getWindowWidth(), config.getWindowHeight()}},
+                                        config.getWindowTitle(), sf::Style::Default};
 
-    this->window->setFramerateLimit(Config::FRAMERATE_LIMIT);
-    this->board = new BoardDisplay{Config::BOARD_WIDTH, Config::BOARD_HEIGHT};
+    this->window->setFramerateLimit(config.getFramerateLimit());
+    this->board = new BoardDisplay{config.getBoardWidth(), config.getBoardHeight(), config};
 }
 
 Application::~Application()
@@ -35,38 +33,29 @@ void Application::start()
         this->tick();
     }
 }
+
 void Application::tick()
 {
-    sf::Event systemEvent;
-
-    while (this->window->pollEvent(systemEvent))
+    while (const std::optional systemEvent = this->window->pollEvent())
     {
         // General application events
-        switch (systemEvent.type)
+        if (systemEvent->is<sf::Event::Closed>())
         {
-            case sf::Event::Closed:
-            {
-                this->window->close();
-                break;
-            }
-            case sf::Event::KeyPressed:
-            {
-                if (systemEvent.key.code == sf::Keyboard::Escape)
-                {
-                    this->window->close();
-                }
-
-                break;
-            }
-            default: break;
+            this->window->close();
+            continue;
         }
 
         this->board->handleEvent(systemEvent);
     }
 
-    this->board->tick();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+    {
+        this->window->close();
+    }
 
-    this->window->clear(Config::WINDOW_CLEAR_COLOR);
+    this->board->tick(this->window);
+
+    this->window->clear(config.getWindowClearColor());
 
     this->board->render(this->window);
     this->window->display();

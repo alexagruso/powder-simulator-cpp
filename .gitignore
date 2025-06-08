@@ -54,3 +54,6 @@ _deps
 
 # doxygen output
 docs/html
+
+# custom zip script
+zip_project.sh
