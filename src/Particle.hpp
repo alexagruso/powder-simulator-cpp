@@ -5,36 +5,17 @@
 
 #include <optional>
 
-/**
- * @file Particle.hpp
- * @brief Particle class for storing individual particle data
- *
- * This file defines the Particle struct which stores its color value
- */
-
-/// General namespace for containing custom application code
 namespace Powder
 {
 
-/**
- * @brief Represents an individual particle
- *
- * This struct stores information for each individual particle, including
- * its color.
- */
 struct Particle
 {
-    /**
-     * @brief Constructs a new particle with the specified color
-     *
-     * @param color Color of the particle
-     */
     Particle(sf::Color color);
 
-    sf::Color color; ///< Color value for the particle
+    sf::Color color;
 };
 
-typedef std::optional<Particle> OptParticle; ///< Type alias for convenience
+typedef std::optional<Particle> OptParticle;
 
 } // namespace Powder
 

@@ -10,4 +10,5 @@ A simple powder physics simulator
 
 ## How to use
 
-- Simply click anywhere inside the window to spawn new particles
+- Simply left-click anywhere inside the window to spawn new particles, and right-click to delete particles
+- Modify `config.txt` to change different settings

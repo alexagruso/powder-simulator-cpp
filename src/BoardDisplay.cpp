@@ -48,6 +48,19 @@ void BoardDisplay::handleEvent(std::optional<sf::Event> event)
             this->isRightHeld = false;
         }
     }
+    else if (const auto* scrollEvent = event->getIf<sf::Event::MouseWheelScrolled>())
+    {
+        if (scrollEvent->delta > 0.0)
+        {
+            // Clamp above by this->MAX_BRUSH_SIZE
+            this->brushSize = std::min(this->brushSize + 1, this->MAX_BRUSH_SIZE);
+        }
+        else if (scrollEvent->delta < 0.0)
+        {
+            // Clamp below by 1
+            this->brushSize = std::max(this->brushSize - 1, 1);
+        }
+    }
 }
 
 void BoardDisplay::tick(sf::RenderWindow* window)
@@ -57,7 +70,18 @@ void BoardDisplay::tick(sf::RenderWindow* window)
 
     for (int row = this->particles.height - 1; row >= 0; row--)
     {
-        for (int column = this->particles.width - 1; column >= 0; column--)
+        int start_column = 0;
+        int end_column = this->particles.width;
+        int offset = 1;
+
+        if (row % 2 == 0)
+        {
+            start_column = this->particles.width - 1;
+            end_column = -1;
+            offset = -1;
+        }
+
+        for (int column = start_column; column != end_column; column += offset)
         {
             // Skip if current cell is on the bottom of the board
             if (static_cast<uint>(row) + 1 >= this->particles.height)
@@ -112,29 +136,48 @@ void BoardDisplay::tick(sf::RenderWindow* window)
     }
 
     // Handle new particles after physics
-    if (auto boardPosition = this->mouseToBoardPosition(mouseX, mouseY))
-    {
-        if (this->isLeftHeld)
-        {
-            sf::Color randomColor = sf::Color{
-                static_cast<uint8_t>(this->colorDistribution(this->randomEngine)),
-                static_cast<uint8_t>(this->colorDistribution(this->randomEngine)),
-                static_cast<uint8_t>(this->colorDistribution(this->randomEngine)),
-            };
-            OptParticle newParticle = Particle{randomColor};
+    const auto boardPosition = this->mouseToBoardPosition(mouseX, mouseY);
+    if (!boardPosition)
+        return;
 
-            this->particles.set(boardPosition->first, boardPosition->second, newParticle);
-        }
-        else if (this->isRightHeld)
+    if (this->isLeftHeld)
+    {
+        for (int dy = -(this->brushSize - 1); dy <= this->brushSize - 1; dy++)
         {
-            this->particles.set(boardPosition->first, boardPosition->second, std::nullopt);
+            for (int dx = -(this->brushSize - 1); dx <= this->brushSize - 1; dx++)
+            {
+                if (this->particles.isValidBoardPosition(boardPosition->first + dx, boardPosition->second + dy))
+                {
+                    sf::Color randomColor = sf::Color{
+                        static_cast<uint8_t>(this->colorDistribution(this->randomEngine)),
+                        static_cast<uint8_t>(this->colorDistribution(this->randomEngine)),
+                        static_cast<uint8_t>(this->colorDistribution(this->randomEngine)),
+                    };
+                    OptParticle newParticle = Particle{randomColor};
+
+                    this->particles.set(boardPosition->first + dx, boardPosition->second + dy, newParticle);
+                }
+            }
+        }
+    }
+    else if (this->isRightHeld)
+    {
+        for (int dy = -(this->brushSize - 1); dy <= this->brushSize - 1; dy++)
+        {
+            for (int dx = -(this->brushSize - 1); dx <= this->brushSize - 1; dx++)
+            {
+                if (this->particles.isValidBoardPosition(boardPosition->first + dx, boardPosition->second + dy))
+                {
+                    this->particles.set(boardPosition->first + dx, boardPosition->second + dy, std::nullopt);
+                }
+            }
         }
     }
 }
 
 void BoardDisplay::render(sf::RenderWindow* window)
 {
-    sf::RectangleShape particlePixel{
+    sf::RectangleShape brushPixel{
         {static_cast<float>(config.getParticlePixelSize()), static_cast<float>(config.getParticlePixelSize())}
     };
 
@@ -146,11 +189,38 @@ void BoardDisplay::render(sf::RenderWindow* window)
             if (!currentParticle)
                 continue;
 
-            particlePixel.setPosition({static_cast<float>(column * this->config.getParticlePixelSize()),
-                                       static_cast<float>(row * this->config.getParticlePixelSize())});
-            particlePixel.setFillColor(currentParticle->color);
+            brushPixel.setPosition({static_cast<float>(column * this->config.getParticlePixelSize()),
+                                    static_cast<float>(row * this->config.getParticlePixelSize())});
+            brushPixel.setFillColor(currentParticle->color);
 
-            window->draw(particlePixel);
+            window->draw(brushPixel);
+        }
+    }
+
+    // Handle new particles after physics
+    const auto boardPosition = this->mouseToBoardPosition(mouseX, mouseY);
+    if (!boardPosition)
+        return;
+
+    // Draw brush preview over existing particles
+    for (int dy = -(this->brushSize - 1); dy <= this->brushSize - 1; dy++)
+    {
+        for (int dx = -(this->brushSize - 1); dx <= this->brushSize - 1; dx++)
+        {
+            if (!this->particles.isValidBoardPosition(boardPosition->first + dx, boardPosition->second + dy))
+                continue;
+
+            // Continue if the current pixel is in the center of the brush area
+            if (dx != -(this->brushSize - 1) && dx != (this->brushSize - 1) && dy != -(this->brushSize - 1) &&
+                dy != (this->brushSize - 1))
+                continue;
+
+            brushPixel.setPosition(
+                {static_cast<float>((boardPosition->first + dx) * this->config.getParticlePixelSize()),
+                 static_cast<float>((boardPosition->second + dy) * this->config.getParticlePixelSize())});
+            brushPixel.setFillColor(sf::Color::White);
+
+            window->draw(brushPixel);
         }
     }
 }
